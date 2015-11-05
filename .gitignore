@@ -1,0 +1,13 @@
+# ignore node and bower root
+bower_components
+node_modules
+
+# ignore build folders
+.tmp
+dist
+
+# ignore temp files
+.DS_Store
+
+# ignore ide related
+.idea/
