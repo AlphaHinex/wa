@@ -6,7 +6,9 @@ module.exports = function(grunt) {
   require('time-grunt')(grunt);
 
   // Automatically load required Grunt tasks
-  require('jit-grunt')(grunt);
+  require('jit-grunt')(grunt, {
+    configureProxies: 'grunt-connect-proxy'
+  });
 
   // Configurable paths for the application
   var appConfig = {
@@ -60,19 +62,32 @@ module.exports = function(grunt) {
         hostname: 'localhost',
         livereload: 35729
       },
+      proxies: [
+        {
+          context: '/api',
+          host: 'localhost',
+          port: 8080
+        }
+      ],
       livereload: {
         options: {
           open: true,
-          middleware: function (connect) {
-            return [
-              connect.static('.tmp'),
-              // redirect resources under '/bower_components' and '/src' in page with the static files from base path (this file's path)
-              connect().use(
-                '/bower_components',
-                connect.static('./bower_components')
-              ),
-              connect.static(appConfig.src)
-            ];
+          base: [
+            '.tmp',
+            '<%= app.src %>'
+          ],
+          middleware: function (connect, options) {
+            // Setup the proxy
+            var middlewares = [require('grunt-connect-proxy/lib/utils').proxyRequest];
+
+            // Serve static files
+            options.base.forEach(function(base) {
+              middlewares.push(connect.static(base));
+            });
+            middlewares.push(connect().use('/bower_components', connect.static('./bower_components')));
+            middlewares.push(connect.static(appConfig.src));
+
+            return middlewares;
           }
         }
       },
@@ -181,6 +196,7 @@ module.exports = function(grunt) {
     grunt.task.run([
       'clean:server',
       'wiredep',
+      'configureProxies:server',
       'connect:livereload',
       'watch'
     ]);
