@@ -23,6 +23,10 @@ module.exports = function(grunt) {
 
     // Watches files for changes and runs tasks based on the changed files
     watch: {
+      bower: {
+        files: ['bower.json'],
+        tasks: ['wiredep']
+      },
       js: {
         files: [
           '<%= app.src %>/**/*.js'
@@ -67,14 +71,7 @@ module.exports = function(grunt) {
                 '/bower_components',
                 connect.static('./bower_components')
               ),
-              connect().use(
-                '/src',
-                connect.static('./src')
-              ),
-              connect().use(
-                '/dist',
-                connect.static('./dist')
-              )
+              connect.static(appConfig.src)
             ];
           }
         }
@@ -113,6 +110,14 @@ module.exports = function(grunt) {
         }]
       },
       server: '.tmp'
+    },
+
+    // Automatically inject Bower components into the app
+    wiredep: {
+      app: {
+        src: ['<%= app.src %>/index.html'],
+        ignorePath:  /\.\.\//
+      }
     },
 
     concat: {
@@ -168,20 +173,21 @@ module.exports = function(grunt) {
 
   });
 
-  grunt.registerTask('build', ['clean', 'concat:build', 'ngAnnotate:build']);
-
-  grunt.registerTask('default', ['clean', 'concat:dist', 'ngAnnotate:dist', 'uglify', 'cssmin']);
-
   grunt.registerTask('serve', 'Compile then start a connect web server', function (target) {
     if (target === 'dist') {
       return grunt.task.run(['build', 'connect:dist:keepalive']);
     }
 
     grunt.task.run([
-      'build',
+      'clean:server',
+      'wiredep',
       'connect:livereload',
       'watch'
     ]);
   });
+
+  grunt.registerTask('build', ['clean', 'wiredep', 'concat:build', 'ngAnnotate:build']);
+
+  grunt.registerTask('default', ['clean', 'wiredep', 'concat:dist', 'ngAnnotate:dist', 'uglify', 'cssmin']);
 
 };
