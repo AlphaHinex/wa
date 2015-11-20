@@ -1,8 +1,10 @@
 {
-  "name": "ares",
-  "version": "0.1.0",
+  "name": "wa",
+  "version": "0.0.1",
   "dependencies": {
-    "angularjs": "~1.5.7"
+    "angular-route": "^1.3.0 || >1.4.0-beta.0",
+    "angular-material": "~1.0.0-rc2",
+    "angular-material-data-table": "~0.8.14"
   },
   "devDependencies": {
   }
