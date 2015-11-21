@@ -1,0 +1,24 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <title>Hinex TEST</title>
+</head>
+<body>
+  <span>test lean cloud js api</span>
+  <script src="https://cdn1.lncld.net/static/js/av-core-mini-0.6.4.js"></script>
+  <script type="text/javascript">
+  AV.initialize('ncucSqWquNS5qSBCNrqEhA8O', 'd6cARxGcTwgyi0IGz7ss7LHp');
+
+  var TestObject = AV.Object.extend('TestObject');
+  var testObject = new TestObject();
+  testObject.save({
+    foo: 'bar'
+  }, {
+    success: function(object) {
+      alert('LeanCloud works!');
+    }
+  });
+  </script>
+</body>
+</html>
