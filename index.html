@@ -13,7 +13,8 @@
   var TestObject = AV.Object.extend('TestObject');
   var testObject = new TestObject();
   testObject.save({
-    foo: 'bar'
+    foo: 'bar',
+    test: new Date()
   }, {
     success: function(object) {
       alert('LeanCloud works!');
