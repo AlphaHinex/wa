@@ -14,7 +14,7 @@
     <h1 flex="20">Wendy & Alpha</h1>
   </md-toolbar>
   <div layout="row" flex>
-    <div layout="column" flex ng-controller="appCtrl">
+    <div layout="column" flex ng-controller="appCtrl as ctrl">
       <md-content class="md-padding">
         <md-tabs md-dynamic-height>
           <md-tab id="case">
@@ -23,22 +23,27 @@
               <md-card>
                 <md-content layout-padding>
                   <form name="caseForm">
+                    <md-datepicker ng-model="case.initDate" md-placeholder="日期"></md-datepicker>
                     <div layout layout-sm="column">
-                      <md-input-container flex>
+                      <md-input-container flex="40">
                         <label>原告</label>
                         <input ng-model="case.plaintiff" required>
                       </md-input-container>
-                      <md-input-container flex>
-                        <label>事由</label>
-                        <input ng-model="case.excuse">
-                      </md-input-container>
-                    </div>
-                    <div layout layout-sm="column">
-                      <md-input-container flex>
-                        <label>保险公司</label>
-                        <input ng-model="case.insurance">
-                      </md-input-container>
-                      <md-datepicker ng-model="case.date" md-placeholder="日期"></md-datepicker>
+                      <md-autocomplete
+                        flex="60"
+                        md-floating-label="保险公司"
+                        md-search-text="ctrl.searchText"
+                        md-items="item in ctrl.querySearch(ctrl.searchText)"
+                        md-item-text="item"
+                        md-min-length="0"
+                        md-selected-item="case.insurance">
+                        <md-item-template>
+                          <span md-highlight-text="ctrl.searchText" md-highlight-flags="^i">{{item}}</span>
+                        </md-item-template>
+                        <md-not-found>
+                          "{{ctrl.searchText}}" 尚不存在,请添加.
+                        </md-not-found>
+                      </md-autocomplete>
                     </div>
                     <md-input-container layout flex>
                       <label>详细记录</label>
