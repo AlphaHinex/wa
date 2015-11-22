@@ -23,7 +23,7 @@
 
     <!-- Add your site or application content here -->
     <md-toolbar layout="row" class="md-toolbar-tools">
-      <h1 flex="20">Wendy & Alpha</h1>
+      <h1 flex>Wendy & Alpha</h1>
     </md-toolbar>
     <div layout="row" flex>
       <div layout="column" flex ng-controller="appCtrl as ctrl">
@@ -36,11 +36,15 @@
                   <md-content layout-padding>
                     <form name="caseForm">
                       <div layout layout-sm>
-                        <label style="align-self: center;">立案日期</label>
-                        <md-datepicker ng-model="case.initDate"se.inlaceholder="立案日期"></md-datepicker>
+                        <div>
+                          <label style="align-self: center;">立案日期</label>
+                          <md-datepicker ng-model="case.initDate"se.inlaceholder="立案日期"></md-datepicker>
+                        </div>
                         <span flex="5"></span>
-                        <label style="align-self: center;">结案日期</label>
-                        <md-datepicker ng-model="case.finishDate" md-placeholder="结案日期"></md-datepicker>
+                        <div>
+                          <label style="align-self: center;">结案日期</label>
+                          <md-datepicker ng-model="case.finishDate" md-placeholder="结案日期"></md-datepicker>
+                        </div>
                       </div>
                       <div layout layout-sm="column">
                         <md-input-container flex="40">
@@ -78,6 +82,20 @@
                         <md-button class="md-raised" ng-click="cancel()">取消</md-button>
                       </div>
                     </form>
+                  </md-content>
+                </md-card>
+                <md-card>
+                  <md-content>
+                    <md-list>
+                      <md-subheader class="md-no-sticky">案件列表</md-subheader>
+                      <md-list-item class="md-3-line" ng-repeat="item in ctrl.allCases">
+                        <div class="md-list-item-text" layout="column">
+                          <h3>{{ item.plaintiff }} / {{ item.defendants }}</h3>
+                          <h4>{{ item.initDate }} / {{ item.finishDate }}</h4>
+                          <p>{{ item.details }}</p>
+                        </div>
+                      </md-list-item>
+                    </md-list>
                   </md-content>
                 </md-card>
               </md-tab-body>

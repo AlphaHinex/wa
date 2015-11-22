@@ -68,6 +68,30 @@ var appCtrl = function($scope, $mdToast) {
   $scope.cancel = function() {
     $scope.case = newCase(self);
   };
+
+  self.allCases = [];
+  AV.Query.doCloudQuery('select * from Case', {
+    success: function(result) {
+      var results = result.results;
+      console.dir(results);
+      angular.forEach(results, function(obj){
+        self.allCases.push({
+          id: obj.id,
+          createdAt: obj.createdAt,
+          updatedAt: obj.updatedAt,
+          initDate: obj.attributes.initDate,
+          finishDate: obj.attributes.finishDate,
+          plaintiff: obj.attributes.plaintiff,
+          defendants: obj.attributes.defendants,
+          details: obj.attributes.details,
+          state: obj.attributes.state
+        });
+      });
+    },
+    error: function(error) {
+      console.dir(error);
+    }
+  });
 };
 
 app.controller('appCtrl', appCtrl);
