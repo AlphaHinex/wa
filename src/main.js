@@ -6,8 +6,10 @@ var Case = AV.Object.extend('Case');
 var app = angular.module('wa', ['ngRoute', 'ngMaterial', 'md.data.table']);
 
 var allInsurances = function() {
-  var all = '大地保险, 中华财险, 永安保险, ' +
-            'PICC, 太平洋保险, 大都会, 人保财险';
+  var all = '人保财险, 平安保险, 天安保险, 中华联合, 人寿财险, ' +
+            '浙商保险, 华泰保险, 民安保险, 永安保险, 大地保险, ' +
+            '永诚保险, 都邦保险, 信达保险, 华安保险, 太平保险, ' +
+            '太平洋保险, 安华农业, 紫金财险, 渤海保险, 中银保险';
   return all.split(/, +/g).map(function(ins) {
     return ins;
   });
@@ -25,8 +27,13 @@ var newCase = function() {
   };
 };
 
+var allStates = function() {
+  return ['判决', '调解', '和解', '不予受理'];
+};
+
 var appCtrl = function($scope, $mdToast) {
   var self = this;
+  self.states = allStates();
   self.insurances = allInsurances();
   self.querySearch = function(query) {
     return query ? self.insurances.filter(createFilterFor(query)) : self.insurances;
