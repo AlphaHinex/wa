@@ -7,5 +7,6 @@
     "angular-material-data-table": "~0.8.14"
   },
   "devDependencies": {
-  }
+  },
+  "appPath": "app"
 }
