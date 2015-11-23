@@ -33,7 +33,8 @@
               <md-tab-label>Case</md-tab-label>
               <md-tab-body>
                 <md-card>
-                  <md-content layout-padding>
+                  <md-card-content layout-padding>
+                    <h2 class="md-title">案件信息</h2>
                     <form name="caseForm">
                       <div layout layout-sm>
                         <div>
@@ -82,13 +83,13 @@
                         <md-button class="md-raised" ng-click="cancel()">取消</md-button>
                       </div>
                     </form>
-                  </md-content>
+                  </md-card-content>
                 </md-card>
                 <md-card>
-                  <md-content>
+                  <md-card-content>
                     <md-progress-linear md-mode="query" ng-show="ctrl.querying"></md-progress-linear>
+                    <h2 class="md-title">案件列表</h2>
                     <md-list>
-                      <md-subheader class="md-no-sticky">案件列表</md-subheader>
                       <md-list-item layout-padding>
                         <md-button class="md-raised md-primary" ng-click="searchByName()">检索</md-button>
                         <md-input-container flex md-no-float>
@@ -106,7 +107,7 @@
                         </div>
                       </md-list-item>
                     </md-list>
-                  </md-content>
+                  </md-card-content>
                 </md-card>
               </md-tab-body>
             </md-tab>
