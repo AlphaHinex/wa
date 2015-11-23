@@ -1,0 +1,29 @@
+language:
+  node_js
+node_js:
+  - 0.12
+branches:
+  only:
+    - master
+
+before_script:
+  - npm install -g grunt-cli bower
+  - npm install
+  - bower install
+
+script:
+  - grunt
+
+after_success:
+  - git submodule add -b gh-pages https://${GH_OAUTH_TOKEN}@github.com/${GH_OWNER}/${GH_PROJECT_NAME} site > /dev/null 2>&1
+  - cd site
+  - git rm -r .
+  - cp -R ../dist/* .
+  - cp ../dist/.* .
+  - git add -f .
+  - git config user.name "AlphaHinex"
+  - git config user.email "AlphaHinex@gmail.com"
+  - DATE=`date +%Y-%m-%d`
+  - TIME=`date +%H:%M:%S`
+  - git commit -am "Travis CI synchronized gh-pages at $DATE $TIME"
+  - git push https://${GH_OAUTH_TOKEN}@github.com/${GH_OWNER}/${GH_PROJECT_NAME} HEAD:gh-pages > /dev/null 2>&1
