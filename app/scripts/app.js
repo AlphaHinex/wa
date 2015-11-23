@@ -70,7 +70,7 @@ var appCtrl = function($scope, $mdToast) {
   };
 
   self.allCases = [];
-  AV.Query.doCloudQuery('select * from Case', {
+  AV.Query.doCloudQuery('select * from Case order by updatedAt desc', {
     success: function(result) {
       var results = result.results;
       angular.forEach(results, function(obj){
@@ -91,6 +91,10 @@ var appCtrl = function($scope, $mdToast) {
       console.dir(error);
     }
   });
+
+  self.selectCase = function(item) {
+    console.log(item);
+  };
 };
 
 app.controller('appCtrl', appCtrl);

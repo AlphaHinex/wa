@@ -88,10 +88,10 @@
                   <md-content>
                     <md-list>
                       <md-subheader class="md-no-sticky">案件列表</md-subheader>
-                      <md-list-item class="md-3-line" ng-repeat="item in ctrl.allCases">
+                      <md-list-item class="md-3-line" ng-repeat="item in ctrl.allCases" ng-click="ctrl.selectCase(item)">
                         <div class="md-list-item-text" layout="column">
                           <h3>{{ item.plaintiff }} / {{ item.defendants }}</h3>
-                          <h4>{{ item.initDate }} / {{ item.finishDate }}</h4>
+                          <h4>{{ item.state }} ( {{ item.initDate }} ~ {{ item.finishDate }} )</h4>
                           <p>{{ item.details }}</p>
                         </div>
                       </md-list-item>
