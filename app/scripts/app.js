@@ -118,6 +118,26 @@ var saveOrUpdate = function($log, ctrl, $scope, $mdToast) {
   }
 };
 
+var setColor = function(state) {
+  var states = allStates();
+  var result = 'color: ';
+  switch (state) {
+    case states[0]:
+      result += 'red';
+      break;
+    case states[1]:
+      result += 'purple';
+      break;
+    case states[2]:
+      result += 'green';
+      break;
+    case states[3]:
+      result += 'blue';
+      break;
+  }
+  return result;
+};
+
 var appCtrl = function($scope, $mdToast, $log) {
   var self = this;
   self.states = allStates();
@@ -148,25 +168,7 @@ var appCtrl = function($scope, $mdToast, $log) {
     refreshList(self);
   };
 
-  self.setColor = function(state) {
-    var states = allStates();
-    var result = 'color: ';
-    switch (state) {
-      case states[0]:
-        result += 'red';
-        break;
-      case states[1]:
-        result += 'purple';
-        break;
-      case states[2]:
-        result += 'green';
-        break;
-      case states[3]:
-        result += 'blue';
-        break;
-    }
-    return result;;
-  };
+  self.setColor = setColor;
 };
 
 app.controller('appCtrl', appCtrl);
