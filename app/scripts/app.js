@@ -126,6 +126,7 @@ var appCtrl = function($scope, $mdToast, $log) {
 
   $scope.cancel = function() {
     resetCase(self, $scope);
+    refreshList(self);
   };
 
   self.selectCase = function(item) {
