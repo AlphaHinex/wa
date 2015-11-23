@@ -97,8 +97,6 @@ var saveOrUpdate = function($log, ctrl, $scope, $mdToast) {
         c.set('details', $scope.case.details);
         c.set('state', $scope.case.state);
         c.save(null, saveOrUpdateCallbacks($log, ctrl, $scope, $mdToast));
-        $log.debug('Update case with objectId: ' + c.id);
-        postSaveAndUpdate(ctrl, $scope, $mdToast);
       },
       error: function(c, error) {
         $log.debug('Update case failed cause: ' + error.message);
@@ -131,8 +129,8 @@ var appCtrl = function($scope, $mdToast, $log) {
   };
 
   self.selectCase = function(item) {
-    self.searchText = '';
     $scope.case = item;
+    self.searchText = $scope.case.defendants;
   };
 };
 
