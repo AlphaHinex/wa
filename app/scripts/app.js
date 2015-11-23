@@ -120,7 +120,7 @@ var saveOrUpdate = function($log, ctrl, $scope, $mdToast) {
 
 var setColor = function(state) {
   var states = allStates();
-  var result = 'color: ';
+  var result = 'font-weight: bold; color: ';
   switch (state) {
     case states[0]:
       result += 'red';
