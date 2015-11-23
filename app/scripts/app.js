@@ -147,6 +147,26 @@ var appCtrl = function($scope, $mdToast, $log) {
   $scope.searchByName = function() {
     refreshList(self);
   };
+
+  self.setColor = function(state) {
+    var states = allStates();
+    var result = 'color: ';
+    switch (state) {
+      case states[0]:
+        result += 'red';
+        break;
+      case states[1]:
+        result += 'purple';
+        break;
+      case states[2]:
+        result += 'green';
+        break;
+      case states[3]:
+        result += 'blue';
+        break;
+    }
+    return result;;
+  };
 };
 
 app.controller('appCtrl', appCtrl);
