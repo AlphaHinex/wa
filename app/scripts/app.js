@@ -73,7 +73,6 @@ var appCtrl = function($scope, $mdToast) {
   AV.Query.doCloudQuery('select * from Case', {
     success: function(result) {
       var results = result.results;
-      console.dir(results);
       angular.forEach(results, function(obj){
         self.allCases.push({
           id: obj.id,
