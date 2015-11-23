@@ -21,9 +21,9 @@ var createFilterFor = function(query) {
   };
 };
 
-var newCase = function(ctrl) {
+var resetCase = function(ctrl, $scope) {
   ctrl.searchText = '';
-  return {
+  $scope.case = {
     initDate: new Date()
   };
 };
@@ -57,49 +57,82 @@ var refreshList = function(ctrl) {
   });
 };
 
+var postSaveAndUpdate = function(ctrl, $scope, $mdToast) {
+  resetCase(ctrl, $scope);
+  refreshList(ctrl);
+  $mdToast.show(
+    $mdToast.simple()
+      .content('保存成功!')
+      .position('right top')
+      .hideDelay(1500)
+  );
+};
+
+var saveOrUpdateCallbacks = function($log, ctrl, $scope, $mdToast) {
+  return {
+    success: function(c) {
+      $log.debug('Save case with objectId: ' + c.id);
+      postSaveAndUpdate(ctrl, $scope, $mdToast);
+    },
+    error: function(c, error) {
+      $log.debug('Save case failed cause: ' + error.message);
+    }
+  };
+};
+
+var saveOrUpdate = function($log, ctrl, $scope, $mdToast) {
+  if (!$scope.case.defendants) {
+    $scope.case.defendants = ctrl.searchText;
+  }
+  $log.debug($scope.case);
+
+  if ($scope.case.id) {
+    var query = new AV.Query(Case);
+    query.get($scope.case.id, {
+      success: function(c) {
+        c.set('initDate', $scope.case.initDate);
+        c.set('finishDate', $scope.case.finishDate);
+        c.set('plaintiff', $scope.case.plaintiff);
+        c.set('defendants', $scope.case.defendants);
+        c.set('details', $scope.case.details);
+        c.set('state', $scope.case.state);
+        c.save(null, saveOrUpdateCallbacks($log, ctrl, $scope, $mdToast));
+        $log.debug('Update case with objectId: ' + c.id);
+        postSaveAndUpdate(ctrl, $scope, $mdToast);
+      },
+      error: function(c, error) {
+        $log.debug('Update case failed cause: ' + error.message);
+      }
+    });
+  } else {
+    var c = Case.new($scope.case);
+    c.save(null, saveOrUpdateCallbacks($log, ctrl, $scope, $mdToast));
+  }
+};
+
 var appCtrl = function($scope, $mdToast, $log) {
   var self = this;
   self.states = allStates();
   self.allDefendants = allDefendants();
 
+  resetCase(self, $scope);
   refreshList(self);
 
   self.querySearch = function(query) {
     return query ? self.allDefendants.filter(createFilterFor(query)) : self.allDefendants;
   };
 
-  $scope.case = newCase(self);
-
   $scope.save = function() {
-    if (!$scope.case.defendants) {
-      $scope.case.defendants = self.searchText;
-    }
-    $log.debug($scope.case);
-    var c = Case.new($scope.case);
-    c.save(null, {
-      success: function(c) {
-        $log.debug('Save case with objectId: ' + c.id);
-        $scope.case = newCase(self);
-        refreshList(self);
-        $mdToast.show(
-          $mdToast.simple()
-            .content('保存成功!')
-            .position('right top')
-            .hideDelay(1500)
-        );
-      },
-      error: function(c, error) {
-        $log.debug('Save case failed cause: ' + error.message);
-      }
-    });
+    saveOrUpdate($log, self, $scope, $mdToast);
   };
 
   $scope.cancel = function() {
-    $scope.case = newCase(self);
+    resetCase(self, $scope);
   };
 
   self.selectCase = function(item) {
-    $log.debug(item);
+    self.searchText = '';
+    $scope.case = item;
   };
 };
 
