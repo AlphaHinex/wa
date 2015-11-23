@@ -41,11 +41,8 @@ var refreshList = function(ctrl) {
     'order by updatedAt desc ' +
     'limit 20';
 
-  console.log('Call refresh list with cql: ' + cql);
   AV.Query.doCloudQuery(cql, {
     success: function(result) {
-      console.log('Query success');
-      console.log(result);
       var results = result.results;
       angular.forEach(results, function(obj){
         ctrl.allCases.push({
@@ -60,8 +57,6 @@ var refreshList = function(ctrl) {
           state: obj.attributes.state
         });
       });
-      console.log(ctrl);
-      console.log(ctrl.allCases);
     },
     error: function(error) {
       console.dir(error);
