@@ -8,5 +8,8 @@
   },
   "devDependencies": {
   },
-  "appPath": "app"
+  "appPath": "app",
+  "resolutions": {
+    "angular-material": "~1.0.0-rc2"
+  }
 }
