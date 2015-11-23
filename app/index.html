@@ -79,7 +79,7 @@
                       </md-input-container>
                       <div class="md-actions" layout="row">
                         <md-button class="md-raised md-primary" ng-click="save()" ng-show="caseForm.$valid">保存</md-button>
-                        <md-button class="md-raised" ng-click="cancel()" ng-show="caseForm.$dirty">取消</md-button>
+                        <md-button class="md-raised" ng-click="cancel()">取消</md-button>
                       </div>
                     </form>
                   </md-content>
@@ -88,6 +88,11 @@
                   <md-content>
                     <md-list>
                       <md-subheader class="md-no-sticky">案件列表</md-subheader>
+                      <md-list-item>
+                        <md-input-container flex md-no-float>
+                          <input ng-model="ctrl.nameFilter" placeholder="Search..." ng-change="searchByName()">
+                        </md-input-container>
+                      </md-list-item>
                       <md-list-item class="md-3-line" ng-repeat="item in ctrl.allCases" ng-click="ctrl.selectCase(item)">
                         <div class="md-list-item-text" layout="column">
                           <h3>{{ item.plaintiff }} / {{ item.defendants }}</h3>
@@ -99,9 +104,6 @@
                   </md-content>
                 </md-card>
               </md-tab-body>
-            </md-tab>
-            <md-tab id="search">
-              <md-tab-label>Search</md-tab-label>
             </md-tab>
             <md-tab id="statistic">
               <md-tab-label>Statistic</md-tab-label>

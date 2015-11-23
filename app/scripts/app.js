@@ -34,8 +34,18 @@ var allStates = function() {
 
 var refreshList = function(ctrl) {
   ctrl.allCases = [];
-  AV.Query.doCloudQuery('select * from Case order by updatedAt desc', {
+  var wherePart = ctrl.nameFilter ? 'where plaintiff like \'%' + ctrl.nameFilter + '%\' ' : '';
+  var cql = 'select * ' +
+    'from Case ' +
+    wherePart +
+    'order by updatedAt desc ' +
+    'limit 20';
+
+  console.log('Call refresh list with cql: ' + cql);
+  AV.Query.doCloudQuery(cql, {
     success: function(result) {
+      console.log('Query success');
+      console.log(result);
       var results = result.results;
       angular.forEach(results, function(obj){
         ctrl.allCases.push({
@@ -50,6 +60,8 @@ var refreshList = function(ctrl) {
           state: obj.attributes.state
         });
       });
+      console.log(ctrl);
+      console.log(ctrl.allCases);
     },
     error: function(error) {
       console.dir(error);
@@ -132,6 +144,10 @@ var appCtrl = function($scope, $mdToast, $log) {
   self.selectCase = function(item) {
     $scope.case = item;
     self.searchText = $scope.case.defendants;
+  };
+
+  $scope.searchByName = function() {
+    refreshList(self);
   };
 };
 
