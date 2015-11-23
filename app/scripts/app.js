@@ -33,6 +33,7 @@ var allStates = function() {
 };
 
 var refreshList = function(ctrl) {
+  ctrl.querying = true;
   ctrl.allCases = [];
   var wherePart = ctrl.nameFilter ? 'where plaintiff like \'%' + ctrl.nameFilter + '%\' ' : '';
   var cql = 'select * ' +
@@ -57,8 +58,10 @@ var refreshList = function(ctrl) {
           state: obj.attributes.state
         });
       });
+      ctrl.querying = false;
     },
     error: function(error) {
+      ctrl.querying = false;
       console.dir(error);
     }
   });
