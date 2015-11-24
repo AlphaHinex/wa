@@ -142,6 +142,29 @@ var setColor = function(state) {
   return result;
 };
 
+var dailyCount = function(max, dateStr) {
+  var from = new Date(dateStr);
+      from.setUTCHours(0, 0, 0, 0);
+      from = from.toISOString();
+  var to = new Date(dateStr);
+      to.setUTCHours(23, 59, 59, 999);
+      to = to.toISOString();
+  var cql = 'select count(*) ' +
+    'from Case ' +
+      //'where plaintiff like \'%张%\' ' +
+    'where plaintiff > \'\' ' +
+    'and ((createdAt < date(\'' + to + '\') and createdAt > date(\'' + from + '\')) ' +
+    'or (updatedAt > date(\'' + from + '\') and updatedAt < date(\'' + to + '\')))';
+  AV.Query.doCloudQuery(cql, {
+    success: function(result) {
+      console.log(dateStr + ':' + (result.count / max));
+    },
+    error: function(error) {
+      console.dir(error);
+    }
+  });
+};
+
 var appCtrl = function($scope, $mdToast, $log) {
   var self = this;
   self.states = allStates();
@@ -173,7 +196,12 @@ var appCtrl = function($scope, $mdToast, $log) {
   };
 
   self.setColor = setColor;
+
+  $scope.test = function() {
+    dailyCount(10, '2015-11-22');
+    dailyCount(10, '2015-11-23');
+    dailyCount(10, '2015-11-24');
+  };
 };
 
 app.controller('appCtrl', appCtrl);
-

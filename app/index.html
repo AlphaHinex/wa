@@ -114,6 +114,10 @@
             </md-tab>
             <md-tab id="statistic">
               <md-tab-label>Statistic</md-tab-label>
+              <md-tab-body>
+                <div id="calendarView"></div>
+                <md-button class="md-raised md-primary" ng-click="test()">test</md-button>
+              </md-tab-body>
             </md-tab>
           </md-tabs>
         </md-content>
@@ -144,6 +148,7 @@
     <!-- endbuild -->
 
     <script src="https://cdn1.lncld.net/static/js/av-core-mini-0.6.4.js"></script>
+    <script src="http://cdn.staticfile.org/d3/3.4.13/d3.min.js"></script>
 
         <!-- build:js({.tmp,app}) scripts/scripts.js -->
         <script src="scripts/app.js"></script>
