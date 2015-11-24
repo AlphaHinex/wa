@@ -58,24 +58,37 @@ var today = new Date();
 var lastYear = new Date(today.getTime() - 365 * 24 * 60 * 60 * 1000);
 var shiftWeeks = 53 - d3.time.weekOfYear(lastYear);
 
+var shiftWeek = function(d) {
+  var year = d.getFullYear();
+  var thisYear = today.getFullYear();
+  var weekOfYear = d3.time.weekOfYear(d);
+  if (year < thisYear) {
+    weekOfYear = weekOfYear - 53 + shiftWeeks;
+  } else {
+    weekOfYear += shiftWeeks - 1;
+  }
+  return weekOfYear;
+};
+
+var startYear = lastYear.getFullYear();
+var startMonth = lastYear.getDate() === 1 ? lastYear.getMonth() : lastYear.getMonth() + 1;
+for (var i = 0; i < 12; i ++) {
+  var s = new Date(startYear, startMonth + i, 1);
+  var w = shiftWeek(s) + (s.getDay() > 0 ? 1 : 0);
+  var m = s.getMonth() + 1;
+  var l = m > 9 ? m : '0' + m;
+  svg.append('text')
+    .attr('transform', 'translate(' + cellSize * w + ', -5)')
+    .text(l);
+}
+
 var rect = svg.selectAll(".day")
     .data(function(d) { return d3.time.days(lastYear, today); })
   .enter().append("rect")
     .attr("class", "day")
     .attr("width", cellSize)
     .attr("height", cellSize)
-    .attr("x", function(d) {
-      var weekOfYear = d3.time.weekOfYear(d);
-      var year = d.getFullYear();
-      var thisYear = new Date().getFullYear();
-
-      if (year < thisYear) {
-        weekOfYear = weekOfYear - 53 + shiftWeeks;
-      } else {
-        weekOfYear += shiftWeeks - 1;
-      }
-      return weekOfYear * cellSize;
-    })
+    .attr("x", function(d) { return shiftWeek(d) * cellSize; })
     .attr("y", function(d) { return d.getDay() * cellSize; })
     .datum(format);
 
