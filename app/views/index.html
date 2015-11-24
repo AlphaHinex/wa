@@ -35,9 +35,7 @@ var color = function(d) {
   return 'lv' + (lv > 4 ? 4 : lv);
 };
 
-var svg = d3.select("body").selectAll("svg")
-    .data(d3.range(2015, 2016))
-  .enter().append("svg")
+var svg = d3.select("body").append("svg")
     .attr("width", width)
     .attr("height", height)
     .attr("class", "cv")
@@ -58,6 +56,7 @@ svg.append('text')
 
 var today = new Date();
 var lastYear = new Date(today.getTime() - 365 * 24 * 60 * 60 * 1000);
+var shiftWeeks = 53 - d3.time.weekOfYear(lastYear);
 
 var rect = svg.selectAll(".day")
     .data(function(d) { return d3.time.days(lastYear, today); })
@@ -65,7 +64,18 @@ var rect = svg.selectAll(".day")
     .attr("class", "day")
     .attr("width", cellSize)
     .attr("height", cellSize)
-    .attr("x", function(d) { return d3.time.weekOfYear(d) * cellSize; })
+    .attr("x", function(d) {
+      var weekOfYear = d3.time.weekOfYear(d);
+      var year = d.getFullYear();
+      var thisYear = new Date().getFullYear();
+
+      if (year < thisYear) {
+        weekOfYear = weekOfYear - 53 + shiftWeeks;
+      } else {
+        weekOfYear += shiftWeeks - 1;
+      }
+      return weekOfYear * cellSize;
+    })
     .attr("y", function(d) { return d.getDay() * cellSize; })
     .datum(format);
 
