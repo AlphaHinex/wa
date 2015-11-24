@@ -29,7 +29,7 @@ var resetCase = function(ctrl, $scope) {
 };
 
 var allStates = function() {
-  return ['判决', '调解', '和解', '不予受理'];
+  return ['判决', '调解', '和解', '不予受理', '咨询'];
 };
 
 var refreshList = function(ctrl) {
@@ -133,6 +133,9 @@ var setColor = function(state) {
       break;
     case states[3]:
       result += 'blue';
+      break;
+    case states[4]:
+      result += 'brown';
       break;
   }
   return result;
