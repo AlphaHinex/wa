@@ -95,19 +95,22 @@ var rect = svg.selectAll(".day")
 rect.append("title")
     .text(function(d) { return d; });
 
-d3.csv("cv.csv", function(error, csv) {
-  if (error) throw error;
+var data = {
+  '2015-11-21': 15,
+  '2015-11-22': 0,
+  '2015-11-23': 2,
+  '2015-11-24': 9,
+  '2015-11-20': 20,
+  '2015-11-19': 23,
+  '2014-11-24': 9,
+  '2014-11-26': 13,
+  '2015-11-26': 7
+};
 
-  var data = d3.nest()
-    .key(function(d) { return d.Date; })
-    .rollup(function(d) { return d[0].Count / d[0].Max; })
-    .map(csv);
-
-  rect.filter(function(d) { return d in data; })
-      .attr("class", function(d) { return "day " + color(data[d]); })
-    .select("title")
-      .text(function(d) { return d + ": " + (data[d]*20) + ' 件案子'; });
-});
+rect.filter(function(d) { return d in data; })
+  .attr("class", function(d) { return "day " + color(data[d] / 20); })
+  .select("title")
+  .text(function(d) { return d + ": " + data[d] + ' 件案子'; });
 
 d3.select(self.frameElement).style("height", "2910px");
 
