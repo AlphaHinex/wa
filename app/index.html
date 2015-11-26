@@ -117,6 +117,10 @@
               <md-tab-body>
                 <div id="calendarView"></div>
                 <md-button class="md-raised md-primary" ng-click="test()">test</md-button>
+                <md-card layout-padding>
+                  <h2 class="md-title">案件统计</h2>
+                  <div class="cv"></div>
+                </md-card>
               </md-tab-body>
             </md-tab>
           </md-tabs>
@@ -144,14 +148,15 @@
     <script src="bower_components/angular-aria/angular-aria.js"></script>
     <script src="bower_components/angular-material/angular-material.js"></script>
     <script src="bower_components/angular-material-data-table/dist/md-data-table.min.js"></script>
+    <script src="bower_components/d3/d3.js"></script>
     <!-- endbower -->
     <!-- endbuild -->
 
     <script src="https://cdn1.lncld.net/static/js/av-core-mini-0.6.4.js"></script>
-    <script src="http://cdn.staticfile.org/d3/3.4.13/d3.min.js"></script>
 
         <!-- build:js({.tmp,app}) scripts/scripts.js -->
         <script src="scripts/app.js"></script>
+        <script src="scripts/cv.js"></script>
         <!-- endbuild -->
 </body>
 </html>
