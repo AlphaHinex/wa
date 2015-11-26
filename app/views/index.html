@@ -8,9 +8,14 @@ body {
 }
 
 .day {
-  fill: #eee;
-  stroke: #fff;
-  stroke-width: 2px;
+  width: 11px;
+  height: 11px;
+  fill: rgb(238, 238, 238);
+}
+
+.day:hover {
+  stroke: #555;
+  stroke-width: 1px;
 }
 
 .cv .lv0 {fill: #eee;}
@@ -26,7 +31,7 @@ body {
 
 var width = 960,
     height = 136,
-    cellSize = 12; // cell size
+    cellSize = 13; // cell size
 
 var format = d3.time.format("%Y-%m-%d");
 
@@ -96,14 +101,14 @@ rect.append("title")
     .text(function(d) { return d; });
 
 var data = {
+  '2014-11-30': 13,
+  '2014-12-24': 9,
+  '2015-11-19': 23,
+  '2015-11-20': 20,
   '2015-11-21': 15,
   '2015-11-22': 0,
   '2015-11-23': 2,
   '2015-11-24': 9,
-  '2015-11-20': 20,
-  '2015-11-19': 23,
-  '2014-11-24': 9,
-  '2014-11-26': 13,
   '2015-11-26': 7
 };
 
