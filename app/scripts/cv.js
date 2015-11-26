@@ -71,19 +71,34 @@ var rect = svg.selectAll('.day')
 rect.append('title')
   .text(function(d) { return d; });
 
-var data = {
-  '2014-11-30': 13,
-  '2014-12-24': 9,
-  '2015-11-19': 23,
-  '2015-11-20': 20,
-  '2015-11-21': 15,
-  '2015-11-22': 0,
-  '2015-11-23': 2,
-  '2015-11-24': 9,
-  '2015-11-26': 7
+var dailyCount = function(dateStr) {
+  var max = 10;
+  var from = new Date(dateStr);
+  from.setHours(0, 0, 0, 0);
+  from = from.toISOString();
+  var to = new Date(dateStr);
+  to.setHours(23, 59, 59, 999);
+  to = to.toISOString();
+  var cql = 'select count(*) ' +
+    'from Case ' +
+      //'where plaintiff like \'%张%\' ' +
+    'where plaintiff > \'\' ' +
+    'and ((initDate <= date(\'' + to + '\') and initDate >= date(\'' + from + '\')) ' +
+    'or (updatedAt >= date(\'' + from + '\') and updatedAt <= date(\'' + to + '\')))';
+  AV.Query.doCloudQuery(cql, {
+    success: function(result) {
+      d3.selectAll('rect').data(d3.time.days(lastYear, today)).datum(format).filter(function(d) { return d === dateStr; })
+      .attr('class', function() { return 'day ' + color(result.count / max); })
+      .select('title')
+      .text(function(d) { return d + ': ' + result.count + ' 件案子'; });
+    },
+    error: function(error) {
+      console.dir(error);
+    }
+  });
 };
 
-rect.filter(function(d) { return d in data; })
-  .attr('class', function(d) { return 'day ' + color(data[d] / 20); })
-  .select('title')
-  .text(function(d) { return d + ': ' + data[d] + ' 件案子'; });
+var begining = new Date('2015-11-12');
+angular.forEach(d3.time.days(begining < lastYear ? lastYear : begining, today), function(d) {
+  dailyCount(format(d));
+});
