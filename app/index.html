@@ -118,6 +118,17 @@
                 <md-card layout-padding>
                   <h2 class="md-title">案件统计</h2>
                   <div class="cv"></div>
+                  <div ng-controller="gridCtrl">
+                    <div
+                      ui-grid="gridOptions"
+                      ui-grid-exporter
+                      ui-grid-move-columns
+                      ui-grid-pagination
+                      ui-grid-pinning
+                      ui-grid-resize-columns
+                      class="grid">
+                    </div>
+                  </div>
                 </md-card>
               </md-tab-body>
             </md-tab>
@@ -154,6 +165,7 @@
         <!-- build:js({.tmp,app}) scripts/scripts.js -->
         <script src="scripts/app.js"></script>
         <script src="scripts/cv.js"></script>
+        <script src="scripts/grid.js"></script>
         <!-- endbuild -->
 </body>
 </html>
