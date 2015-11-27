@@ -22,7 +22,7 @@
     <![endif]-->
 
     <!-- Add your site or application content here -->
-    <md-toolbar layout="row" class="md-toolbar-tools">
+    <md-toolbar layout="row" class="md-toolbar-tools md-whiteframe-z1">
       <h1 flex>Wendy & Alpha</h1>
       <img src="https://travis-ci.org/AlphaHinex/wa.svg?branch=master" />
     </md-toolbar>
@@ -35,7 +35,7 @@
               <md-tab-body>
                 <md-card>
                   <md-card-content layout-padding>
-                    <h2 class="md-title">案件信息</h2>
+                    <span class="md-title">案件信息</span>
                     <form name="caseForm">
                       <div layout layout-sm>
                         <div>
@@ -89,7 +89,7 @@
                 <md-card>
                   <md-card-content>
                     <md-progress-linear md-mode="query" ng-show="ctrl.querying"></md-progress-linear>
-                    <h2 class="md-title">案件列表</h2>
+                    <span class="md-title">案件列表</span>
                     <md-list>
                       <md-list-item>
                         <md-button class="md-raised md-primary" ng-click="searchByName()">检索</md-button>
@@ -116,7 +116,7 @@
               <md-tab-label>Statistic</md-tab-label>
               <md-tab-body>
                 <md-card layout-padding>
-                  <h2 class="md-title">案件统计</h2>
+                  <span class="md-title">案件统计</span>
                   <div ng-controller="statisCtrl">
                     <div class="cv"></div>
                     <div
