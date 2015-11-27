@@ -27,7 +27,7 @@
       <img src="https://travis-ci.org/AlphaHinex/wa.svg?branch=master" />
     </md-toolbar>
     <div layout="row" flex>
-      <div layout="column" flex ng-controller="appCtrl as ctrl">
+      <div layout="column" flex ng-controller="caseCtrl as ctrl">
         <md-content class="md-padding">
           <md-tabs md-dynamic-height>
             <md-tab id="case">
@@ -117,8 +117,8 @@
               <md-tab-body>
                 <md-card layout-padding>
                   <h2 class="md-title">案件统计</h2>
-                  <div class="cv"></div>
-                  <div ng-controller="gridCtrl">
+                  <div ng-controller="statisCtrl">
+                    <div class="cv"></div>
                     <div
                       ui-grid="gridOptions"
                       ui-grid-exporter
@@ -164,8 +164,8 @@
 
         <!-- build:js({.tmp,app}) scripts/scripts.js -->
         <script src="scripts/app.js"></script>
-        <script src="scripts/cv.js"></script>
-        <script src="scripts/grid.js"></script>
+        <script src="scripts/controllers/caseCtrl.js"></script>
+        <script src="scripts/controllers/statisCtrl.js"></script>
         <!-- endbuild -->
 </body>
 </html>

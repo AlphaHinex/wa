@@ -80,17 +80,17 @@ var dailyCount = function(dateStr) {
   to.setHours(23, 59, 59, 999);
   to = to.toISOString();
   var cql = 'select count(*) ' +
-    'from Case ' +
-      //'where plaintiff like \'%张%\' ' +
-    'where plaintiff > \'\' ' +
-    'and ((initDate <= date(\'' + to + '\') and initDate >= date(\'' + from + '\')) ' +
-    'or (updatedAt >= date(\'' + from + '\') and updatedAt <= date(\'' + to + '\')))';
+              'from Case ' +
+           //'where plaintiff like \'%张%\' ' +
+             'where plaintiff > \'\' ' +
+               'and ((initDate <= date(\'' + to + '\') and initDate >= date(\'' + from + '\')) ' +
+                'or (updatedAt >= date(\'' + from + '\') and updatedAt <= date(\'' + to + '\')))';
   AV.Query.doCloudQuery(cql, {
     success: function(result) {
       d3.selectAll('rect').data(d3.time.days(lastYear, today)).datum(format).filter(function(d) { return d === dateStr; })
-      .attr('class', function() { return 'day ' + color(result.count / max); })
-      .select('title')
-      .text(function(d) { return d + ': ' + result.count + ' 件案子'; });
+        .attr('class', function() { return 'day ' + color(result.count / max); })
+        .select('title')
+        .text(function(d) { return d + ': ' + result.count + ' 件案子'; });
     },
     error: function(error) {
       console.dir(error);
@@ -102,3 +102,62 @@ var begining = new Date('2015-11-12');
 angular.forEach(d3.time.days(begining < lastYear ? lastYear : begining, today), function(d) {
   dailyCount(format(d));
 });
+
+var refreshGridData = function($scope, result) {
+  angular.forEach(result.results, function(obj){
+    $scope.gridOptions.data.push({
+      initDateStr: format(obj.attributes.initDate),
+      updateDateStr: format(obj.updatedAt),
+      finishDateStr: typeof(obj.attributes.finishDate) !== 'undefined' ? format(obj.attributes.finishDate) : '',
+      plaintiff: obj.attributes.plaintiff,
+      defendants: obj.attributes.defendants,
+      details: obj.attributes.details,
+      state: obj.attributes.state
+    });
+  });
+};
+
+var initGridData = function($scope) {
+  var cql = 'select * ' +
+    'from Case ';
+      //'where plaintiff like \'%张%\' ' +
+    //'where plaintiff > \'\' ' +
+  //'and ((initDate <= date(\'' + to + '\') and initDate >= date(\'' + from + '\')) ' +
+  // 'or (updatedAt >= date(\'' + from + '\') and updatedAt <= date(\'' + to + '\')))';
+  AV.Query.doCloudQuery(cql, {
+    success: function(result) {
+      refreshGridData($scope, result);
+    },
+    error: function(error) {
+      console.dir(error);
+    }
+  });
+};
+
+var statisCtrl = function($scope, i18nService) {
+  i18nService.setCurrentLang('zh-cn');
+
+  $scope.gridOptions = {
+    columnDefs: [
+      { name: '原告', field: 'plaintiff', width: 150 },
+      { name: '被告', field: 'defendants', width: 150 },
+      { name: '详细记录', field: 'details' },
+      { name: '立案日期', field: 'initDateStr', width: 100 },
+      { name: '更新日期', field: 'updateDateStr', width: 100 },
+      { name: '结案日期', field: 'finishDateStr', width: 100 },
+      { name: '状态', field: 'state', width: 100 }
+    ],
+    data: [],
+    enableGridMenu: true,
+    enableSorting: false,
+    exporterCsvFilename: 'statistic.csv',
+    exporterMenuPdf: false,
+    paginationPageSizes: [25, 50, 75, 100],
+    paginationPageSize: 25
+  };
+
+  initGridData($scope);
+};
+
+var app = angular.module('wa');
+app.controller('statisCtrl', statisCtrl);

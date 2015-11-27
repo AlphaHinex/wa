@@ -24,3 +24,7 @@ md-data-table-toolbar.alternate {
 .cv .lv2 {fill: #8cc665;}
 .cv .lv3 {fill: #44a340;}
 .cv .lv4 {fill: #1e6823;}
+
+.grid {
+  height: 500px;
+}
