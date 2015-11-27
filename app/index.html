@@ -80,7 +80,7 @@
                         </md-select>
                       </md-input-container>
                       <div class="md-actions" layout="row">
-                        <md-button class="md-raised md-primary" ng-click="save()" ng-show="caseForm.$valid">保存</md-button>
+                        <md-button class="md-raised md-primary" ng-click="save()" ng-show="caseForm.$valid" ng-disabled="ctrl.submiting">保存</md-button>
                         <md-button class="md-raised" ng-click="cancel()">取消</md-button>
                       </div>
                     </form>

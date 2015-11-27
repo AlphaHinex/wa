@@ -71,6 +71,7 @@ var refreshList = function(ctrl) {
 var postSaveAndUpdate = function(ctrl, $scope, $mdToast) {
   resetCase(ctrl, $scope);
   refreshList(ctrl);
+  ctrl.submiting = false;
   $mdToast.show(
     $mdToast.simple()
       .content('保存成功!')
@@ -92,6 +93,7 @@ var saveOrUpdateCallbacks = function($log, ctrl, $scope, $mdToast) {
 };
 
 var saveOrUpdate = function($log, ctrl, $scope, $mdToast) {
+  ctrl.submiting = true;
   if (!$scope.case.defendants) {
     $scope.case.defendants = ctrl.searchText;
   }
