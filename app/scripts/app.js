@@ -3,7 +3,7 @@
 AV.initialize('ncucSqWquNS5qSBCNrqEhA8O', 'd6cARxGcTwgyi0IGz7ss7LHp');
 var Case = AV.Object.extend('Case');
 
-var app = angular.module('wa', ['ngRoute', 'ngMaterial', 'md.data.table']);
+var app = angular.module('wa', ['ngMaterial', 'ui.grid', 'ui.grid.exporter']);
 
 var allDefendants = function() {
   var all = '人保财险, 平安保险, 天安保险, 中华联合, 人寿财险, ' +
