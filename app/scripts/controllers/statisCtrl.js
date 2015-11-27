@@ -71,8 +71,16 @@ var rect = svg.selectAll('.day')
 rect.append('title')
   .text(function(d) { return d; });
 
-var dailyCount = function(dateStr) {
+var dailyCount = function(dateStr, $scope) {
   var max = 10;
+  var sc = $scope.sc;
+  var scPart = '';
+  if (sc.state) {
+    scPart += 'and state = \'' + sc.state + '\' ';
+  }
+  if (sc.defendants || sc.searchText) {
+    scPart += 'and defendants like \'%' + (sc.defendants ? sc.defendants : sc.searchText) + '%\' ';
+  }
   var from = new Date(dateStr);
   from.setHours(0, 0, 0, 0);
   from = from.toISOString();
@@ -81,8 +89,7 @@ var dailyCount = function(dateStr) {
   to = to.toISOString();
   var cql = 'select count(*) ' +
               'from Case ' +
-           //'where plaintiff like \'%张%\' ' +
-             'where plaintiff > \'\' ' +
+             'where plaintiff > \'\' ' + scPart +
                'and ((initDate <= date(\'' + to + '\') and initDate >= date(\'' + from + '\')) ' +
                 'or (updatedAt >= date(\'' + from + '\') and updatedAt <= date(\'' + to + '\')))';
   AV.Query.doCloudQuery(cql, {
@@ -98,12 +105,14 @@ var dailyCount = function(dateStr) {
   });
 };
 
-var begining = new Date('2015-11-12');
-angular.forEach(d3.time.days(begining < lastYear ? lastYear : begining, today), function(d) {
-  dailyCount(format(d));
-});
+var refreshCalendarView = function($scope) {
+  var begining = new Date('2015-11-12');
+  angular.forEach(d3.time.days(begining < lastYear ? lastYear : begining, today), function(d) {
+    dailyCount(format(d), $scope);
+  });
+};
 
-var refreshGridData = function($scope, result) {
+var bindGridData = function($scope, result) {
   angular.forEach(result.results, function(obj){
     $scope.gridOptions.data.push({
       initDateStr: format(obj.attributes.initDate),
@@ -117,16 +126,30 @@ var refreshGridData = function($scope, result) {
   });
 };
 
-var initGridData = function($scope) {
+var refreshGridData = function($scope) {
+  var scPart = '',
+      sc = $scope.sc;
+  if (sc.fromDate) {
+    var fromDate = format(sc.fromDate) + ' 00:00:00.000Z';
+    scPart += 'and (initDate >= date(\'' + fromDate + '\') or updatedAt >= date(\'' + fromDate + '\')) ';
+  }
+  if (sc.toDate) {
+    var toDate = format(sc.toDate) + ' 23:59:59.999Z';
+    scPart += 'and (initDate <= date(\'' + toDate + '\') or updatedAt <= date(\'' + toDate + '\')) ';
+  }
+  if (sc.state) {
+    scPart += 'and state = \'' + sc.state + '\' ';
+  }
+  if (sc.defendants || sc.searchText) {
+    scPart += 'and defendants like \'%' + (sc.defendants ? sc.defendants : sc.searchText) + '%\' ';
+  }
   var cql = 'select * ' +
-    'from Case ';
-      //'where plaintiff like \'%张%\' ' +
-    //'where plaintiff > \'\' ' +
-  //'and ((initDate <= date(\'' + to + '\') and initDate >= date(\'' + from + '\')) ' +
-  // 'or (updatedAt >= date(\'' + from + '\') and updatedAt <= date(\'' + to + '\')))';
+              'from Case ' +
+             'where plaintiff > \'\' ' + scPart;
+  console.debug(cql);
   AV.Query.doCloudQuery(cql, {
     success: function(result) {
-      refreshGridData($scope, result);
+      bindGridData($scope, result);
     },
     error: function(error) {
       console.dir(error);
@@ -135,16 +158,10 @@ var initGridData = function($scope) {
 };
 
 var statisCtrl = function($scope, i18nService) {
-  var ctrl = this;
-  $scope.sc = {};
-  ctrl.test = function() {
-    console.log($scope.sc);
-  };
-  ctrl.reset = function() {
-    $scope.sc = {};
-  };
-
   i18nService.setCurrentLang('zh-cn');
+
+  $scope.sc = {};
+  refreshCalendarView($scope);
 
   $scope.gridOptions = {
     columnDefs: [
@@ -165,7 +182,17 @@ var statisCtrl = function($scope, i18nService) {
     paginationPageSize: 25
   };
 
-  initGridData($scope);
+  var ctrl = this;
+  ctrl.query = function() {
+    console.debug($scope.sc);
+    refreshCalendarView($scope);
+    refreshGridData($scope);
+  };
+  ctrl.reset = function() {
+    $scope.sc = {};
+    $scope.gridOptions.data = [];
+    refreshCalendarView($scope);
+  };
 };
 
 var app = angular.module('wa');
