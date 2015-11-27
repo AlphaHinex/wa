@@ -135,6 +135,16 @@ var initGridData = function($scope) {
 };
 
 var statisCtrl = function($scope, i18nService) {
+  var ctrl = this;
+  $scope.sc = {};
+  ctrl.test = function() {
+    console.log($scope.sc.fromDate);
+    console.log($scope.sc.toDate);
+  };
+  ctrl.reset = function() {
+    $scope.sc = {};
+  };
+
   i18nService.setCurrentLang('zh-cn');
 
   $scope.gridOptions = {
