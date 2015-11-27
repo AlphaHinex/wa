@@ -1,3 +1,5 @@
+'use strict';
+
 var app = angular.module('wa');
 
 app.controller('gridCtrl', function($scope, i18nService){
