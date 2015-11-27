@@ -38,15 +38,10 @@
                     <span class="md-title">案件信息</span>
                     <form name="caseForm">
                       <div layout layout-sm>
-                        <div>
-                          <label style="align-self: center;">立案日期</label>
-                          <md-datepicker ng-model="case.initDate"se.inlaceholder="立案日期"></md-datepicker>
-                        </div>
-                        <span flex="5"></span>
-                        <div>
-                          <label style="align-self: center;">结案日期</label>
-                          <md-datepicker ng-model="case.finishDate" md-placeholder="结案日期"></md-datepicker>
-                        </div>
+                        <label style="align-self: center;">立案日期</label>
+                        <md-datepicker ng-model="case.initDate"se.inlaceholder="立案日期"></md-datepicker>
+                        <label style="align-self: center; padding-left: 20px;">结案日期</label>
+                        <md-datepicker ng-model="case.finishDate" md-placeholder="结案日期"></md-datepicker>
                       </div>
                       <div layout layout-sm="column">
                         <md-input-container flex="40">
@@ -117,11 +112,11 @@
               <md-tab-body>
                 <md-card layout-padding>
                   <span class="md-title">案件统计</span>
-                  <div ng-controller="statisCtrl">
+                  <div ng-controller="statisCtrl as sCtrl">
                     <div layout="column">
                       <div layout="row">
-                        <md-button class="md-raised md-primary" ng-click="statisCtrl.test()">检索</md-button>
-                        <md-button class="md-raised" ng-click="statisCtrl.reset()">清空</md-button>
+                        <md-button class="md-raised md-primary" ng-click="sCtrl.test()">检索</md-button>
+                        <md-button class="md-raised" ng-click="sCtrl.reset()">清空</md-button>
                       </div>
                       <div layout="row">
                         <label style="align-self: center;">起始日期</label>
@@ -132,18 +127,18 @@
                       <div layout="row">
                         <md-input-container>
                           <label>状态</label>
-                          <md-select ng-model="case.state">
+                          <md-select ng-model="sc.state">
                             <md-option ng-repeat="state in ctrl.states" value="{{state}}"><span style="{{ctrl.setColor(state)}}">{{state}}</span></md-option>
                           </md-select>
                         </md-input-container>
                         <md-autocomplete
                           flex
                           md-floating-label="被告"
-                          md-search-text="ctrl.searchText"
-                          md-items="item in ctrl.querySearch(ctrl.searchText)"
+                          md-search-text="sc.searchText"
+                          md-items="item in ctrl.querySearch(sc.searchText)"
                           md-item-text="item"
                           md-min-length="0"
-                          md-selected-item="case.defendants">
+                          md-selected-item="sc.defendants">
                           <md-item-template>
                             <span md-highlight-text="ctrl.searchText" md-highlight-flags="^i">{{item}}</span>
                           </md-item-template>

@@ -138,8 +138,7 @@ var statisCtrl = function($scope, i18nService) {
   var ctrl = this;
   $scope.sc = {};
   ctrl.test = function() {
-    console.log($scope.sc.fromDate);
-    console.log($scope.sc.toDate);
+    console.log($scope.sc);
   };
   ctrl.reset = function() {
     $scope.sc = {};
