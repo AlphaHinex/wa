@@ -113,7 +113,8 @@ var refreshCalendarView = function($scope) {
 };
 
 var bindGridData = function($scope, result) {
-  angular.forEach(result.results, function(obj){
+  $scope.gridOptions.data = [];
+  angular.forEach(result.results, function (obj) {
     $scope.gridOptions.data.push({
       initDateStr: format(obj.attributes.initDate),
       updateDateStr: format(obj.updatedAt),
@@ -130,11 +131,11 @@ var refreshGridData = function($scope) {
   var scPart = '',
       sc = $scope.sc;
   if (sc.fromDate) {
-    var fromDate = format(sc.fromDate) + ' 00:00:00.000Z';
+    var fromDate = format(sc.fromDate) + 'T00:00:00.000Z';
     scPart += 'and (initDate >= date(\'' + fromDate + '\') or updatedAt >= date(\'' + fromDate + '\')) ';
   }
   if (sc.toDate) {
-    var toDate = format(sc.toDate) + ' 23:59:59.999Z';
+    var toDate = format(sc.toDate) + 'T23:59:59.999Z';
     scPart += 'and (initDate <= date(\'' + toDate + '\') or updatedAt <= date(\'' + toDate + '\')) ';
   }
   if (sc.state) {
