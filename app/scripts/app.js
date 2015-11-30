@@ -7,6 +7,7 @@ AV.initialize(avKey, avSecret);
 
 var deps = [
   'ngMaterial',
+  'ngRoute',
   'ui.grid',
   'ui.grid.exporter',
   'ui.grid.moveColumns',
@@ -14,4 +15,16 @@ var deps = [
   'ui.grid.pinning',
   'ui.grid.resizeColumns'
 ];
-angular.module('wa', deps);
+var app = angular.module('wa', deps);
+
+var resourcesRoute = function($routeProvider) {
+  $routeProvider
+    .when('/', {
+      controller: 'loginCtrl',
+      templateUrl: 'views/login.html'
+    })
+    .when('/main', {
+      templateUrl: 'views/main.html'
+    });
+};
+app.config(['$routeProvider', resourcesRoute]);

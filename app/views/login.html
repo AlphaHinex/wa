@@ -1,0 +1,18 @@
+<div layout="row" layout-align="center center" style="margin: 30px;">
+  <md-card>
+    <img ng-src="{{imagePath}}" class="md-card-image">
+    <form name="loginForm">
+      <md-content layout-padding>
+        <md-input-container>
+          <label>用户名</label>
+          <input ng-model="uname" required>
+        </md-input-container>
+        <md-input-container>
+          <label>密码</label>
+          <input ng-model="pwd" type="password" required>
+        </md-input-container>
+        <md-button class="md-raised md-primary" ng-show="loginForm.$valid" ng-click="login()">登录</md-button>
+      </md-content>
+    </form>
+  </md-card>
+</div>
