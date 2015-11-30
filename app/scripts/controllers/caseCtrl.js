@@ -2,6 +2,26 @@
 
 var Case = AV.Object.extend('Case');
 
+var showTitle = function($scope) {
+  var rq = new AV.Query(AV.Role);
+  rq.equalTo('users', AV.User.current());
+  rq.find({
+    success: function(results) {
+      if (results.length == 1) {
+        var role = results[0];
+        if (role.getName() === 'tx') {
+          $scope.title = '铁西区交通法庭';
+        }
+      } else {
+        $scope.title = 'Wendy & Alpha'
+      }
+    },
+    error: function(e) {
+      console.debug(e);
+    }
+  });
+};
+
 var allDefendants = function() {
   var all = '人保财险, 平安保险, 天安保险, 中华联合, 人寿财险, ' +
     '浙商保险, 华泰保险, 民安保险, 永安保险, 大地保险, ' +
@@ -150,6 +170,8 @@ var caseCtrl = function($scope, $mdToast, $log, $location) {
   if (!AV.User.current()) {
     $scope.logout();
   }
+
+  showTitle($scope);
 
   var self = this;
   self.states = allStates();
