@@ -1,75 +1,78 @@
 'use strict';
 
-var width = 750,
-  height = 140,
-  cellSize = 13; // cell size
-
 var format = d3.time.format('%Y-%m-%d');
+
+var today = new Date();
+var lastYear = new Date(today.getTime() - 365 * 24 * 60 * 60 * 1000);
 
 var color = function(d) {
   var lv = Math.ceil(d/0.25);
   return 'lv' + (lv > 4 ? 4 : lv);
 };
 
-var svg = d3.select('.cv').append('svg')
-  .attr('width', width)
-  .attr('height', height)
-  .attr('class', 'cv')
-  .append('g')
-  .attr('transform', 'translate(' + ((width - cellSize * 53) / 2) + ',' + ((height - cellSize * 7) / 2) + ')');
+var drawCalendar = function() {
+  var width = 750,
+      height = 140,
+      cellSize = 13; // cell size
 
-svg.append('text')
-  .attr('transform', 'translate(-14,' + cellSize*1.8 + ')')
-  .text('一');
+  var svg = d3.select('.cvph').append('svg')
+    .attr('width', width)
+    .attr('height', height)
+    .attr('class', 'cv')
+    .append('g')
+    .attr('transform', 'translate(' + ((width - cellSize * 53) / 2) + ',' + ((height - cellSize * 7) / 2) + ')');
 
-svg.append('text')
-  .attr('transform', 'translate(-14,' + cellSize*3.8 + ')')
-  .text('三');
-
-svg.append('text')
-  .attr('transform', 'translate(-14,' + cellSize*5.8 + ')')
-  .text('五');
-
-var today = new Date();
-var lastYear = new Date(today.getTime() - 365 * 24 * 60 * 60 * 1000);
-var shiftWeeks = 53 - d3.time.weekOfYear(lastYear);
-
-var shiftWeek = function(d) {
-  var year = d.getFullYear();
-  var thisYear = today.getFullYear();
-  var weekOfYear = d3.time.weekOfYear(d);
-  if (year < thisYear) {
-    weekOfYear = weekOfYear - 53 + shiftWeeks;
-  } else {
-    weekOfYear += shiftWeeks - 1;
-  }
-  return weekOfYear;
-};
-
-var startYear = lastYear.getFullYear();
-var startMonth = lastYear.getDate() === 1 ? lastYear.getMonth() : lastYear.getMonth() + 1;
-for (var i = 0; i < 12; i ++) {
-  var s = new Date(startYear, startMonth + i, 1);
-  var w = shiftWeek(s) + (s.getDay() > 0 ? 1 : 0);
-  var m = s.getMonth() + 1;
-  var l = m > 9 ? m : '0' + m;
   svg.append('text')
-    .attr('transform', 'translate(' + cellSize * w + ', -5)')
-    .text(l);
-}
+    .attr('transform', 'translate(-14,' + cellSize*1.8 + ')')
+    .text('一');
 
-var rect = svg.selectAll('.day')
-  .data(d3.time.days(lastYear, today))
-  .enter().append('rect')
-  .attr('class', 'day')
-  .attr('width', cellSize)
-  .attr('height', cellSize)
-  .attr('x', function(d) { return shiftWeek(d) * cellSize; })
-  .attr('y', function(d) { return d.getDay() * cellSize; })
-  .datum(format);
+  svg.append('text')
+    .attr('transform', 'translate(-14,' + cellSize*3.8 + ')')
+    .text('三');
 
-rect.append('title')
-  .text(function(d) { return d; });
+  svg.append('text')
+    .attr('transform', 'translate(-14,' + cellSize*5.8 + ')')
+    .text('五');
+
+  var shiftWeeks = 53 - d3.time.weekOfYear(lastYear);
+
+  var shiftWeek = function(d) {
+    var year = d.getFullYear();
+    var thisYear = today.getFullYear();
+    var weekOfYear = d3.time.weekOfYear(d);
+    if (year < thisYear) {
+      weekOfYear = weekOfYear - 53 + shiftWeeks;
+    } else {
+      weekOfYear += shiftWeeks - 1;
+    }
+    return weekOfYear;
+  };
+
+  var startYear = lastYear.getFullYear();
+  var startMonth = lastYear.getDate() === 1 ? lastYear.getMonth() : lastYear.getMonth() + 1;
+  for (var i = 0; i < 12; i ++) {
+    var s = new Date(startYear, startMonth + i, 1);
+    var w = shiftWeek(s) + (s.getDay() > 0 ? 1 : 0);
+    var m = s.getMonth() + 1;
+    var l = m > 9 ? m : '0' + m;
+    svg.append('text')
+      .attr('transform', 'translate(' + cellSize * w + ', -5)')
+      .text(l);
+  }
+
+  var rect = svg.selectAll('.day')
+    .data(d3.time.days(lastYear, today))
+    .enter().append('rect')
+    .attr('class', 'day')
+    .attr('width', cellSize)
+    .attr('height', cellSize)
+    .attr('x', function(d) { return shiftWeek(d) * cellSize; })
+    .attr('y', function(d) { return d.getDay() * cellSize; })
+    .datum(format);
+
+  rect.append('title')
+    .text(function(d) { return d; });
+};
 
 var dailyCount = function(dateStr, $scope) {
   var max = 10;
@@ -147,7 +150,6 @@ var refreshGridData = function($scope) {
   var cql = 'select * ' +
               'from Case ' +
              'where plaintiff > \'\' ' + scPart;
-  console.debug(cql);
   AV.Query.doCloudQuery(cql, {
     success: function(result) {
       bindGridData($scope, result);
@@ -160,6 +162,8 @@ var refreshGridData = function($scope) {
 
 var statisCtrl = function($scope, i18nService) {
   i18nService.setCurrentLang('zh-cn');
+
+  drawCalendar();
 
   $scope.sc = {};
   refreshCalendarView($scope);
@@ -185,7 +189,6 @@ var statisCtrl = function($scope, i18nService) {
 
   var ctrl = this;
   ctrl.query = function() {
-    console.debug($scope.sc);
     refreshCalendarView($scope);
     refreshGridData($scope);
   };
