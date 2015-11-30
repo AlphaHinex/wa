@@ -1,6 +1,12 @@
 'use strict';
 
 var loginCtrl = function($scope, $location) {
+  if (AV.User.current()) {
+    $location.url('/main');
+  } else {
+    $scope.needLogin = true;
+  }
+
   $scope.imagePath = 'images/fall.jpeg';
 
   $scope.login = function() {
