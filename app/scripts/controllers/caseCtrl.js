@@ -7,13 +7,17 @@ var showTitle = function($scope) {
   rq.equalTo('users', AV.User.current());
   rq.find({
     success: function(results) {
-      if (results.length == 1) {
+      if (results.length === 1) {
         var role = results[0];
-        if (role.getName() === 'tx') {
+        $scope.role = role;
+        $scope.roleName = role.getName();
+        if ($scope.roleName === 'tx') {
           $scope.title = '铁西区交通法庭';
         }
-      } else {
-        $scope.title = 'Wendy & Alpha'
+      } else if (results.length > 1) {
+        $scope.role = results[0];
+        $scope.roleName = results[0].getName();
+        $scope.title = 'Wendy & Alpha';
       }
     },
     error: function(e) {
@@ -85,6 +89,13 @@ var refreshList = function(ctrl) {
   });
 };
 
+var getACL = function($scope) {
+  var acl = new AV.ACL();
+  acl.setRoleReadAccess($scope.role, true);
+  acl.setRoleWriteAccess($scope.role, true);
+  return acl;
+};
+
 var postSaveAndUpdate = function(ctrl, $scope, $mdToast) {
   resetCase(ctrl, $scope);
   refreshList(ctrl);
@@ -126,6 +137,7 @@ var saveOrUpdate = function($log, ctrl, $scope, $mdToast) {
         c.set('defendants', $scope.case.defendants);
         c.set('details', $scope.case.details);
         c.set('state', $scope.case.state);
+        c.setACL(getACL($scope));
         c.save(null, saveOrUpdateCallbacks($log, ctrl, $scope, $mdToast));
       },
       error: function(c, error) {
@@ -134,6 +146,7 @@ var saveOrUpdate = function($log, ctrl, $scope, $mdToast) {
     });
   } else {
     var c = Case.new($scope.case);
+    c.setACL(getACL($scope));
     c.save(null, saveOrUpdateCallbacks($log, ctrl, $scope, $mdToast));
   }
 };
