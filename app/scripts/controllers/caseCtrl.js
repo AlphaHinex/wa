@@ -141,7 +141,16 @@ var setColor = function(state) {
   return result;
 };
 
-var caseCtrl = function($scope, $mdToast, $log) {
+var caseCtrl = function($scope, $mdToast, $log, $location) {
+  $scope.logout = function() {
+    AV.User.logOut();
+    $location.url('/');
+  };
+
+  if (!AV.User.current()) {
+    $scope.logout();
+  }
+
   var self = this;
   self.states = allStates();
   self.allDefendants = allDefendants();

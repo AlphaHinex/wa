@@ -4,7 +4,21 @@ var loginCtrl = function($scope, $location) {
   $scope.imagePath = 'images/fall.jpeg';
 
   $scope.login = function() {
-    $location.url('/main');
+    $scope.loging = true;
+    AV.User.logIn($scope.uname, $scope.pwd, {
+      success: function() {
+        $scope.loginErr = false;
+        $scope.loging = false;
+        $location.url('/main');
+      },
+      error: function() {
+        console.log('failed');
+        $scope.loging = false;
+        $scope.uname = '';
+        $scope.pwd = '';
+        $scope.loginErr = true;
+      }
+    });
   };
 };
 

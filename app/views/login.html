@@ -12,7 +12,9 @@
           <input ng-model="pwd" type="password" required>
         </md-input-container>
         <md-button class="md-raised md-primary" ng-show="loginForm.$valid" ng-click="login()">登录</md-button>
+        <div ng-show="loginErr">登录失败</div>
       </md-content>
     </form>
+    <md-progress-linear md-mode="query" ng-show="loging"></md-progress-linear>
   </md-card>
 </div>
