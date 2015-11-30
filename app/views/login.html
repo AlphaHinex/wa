@@ -1,18 +1,18 @@
-<div layout="row" layout-align="center center" style="margin: 30px;" ng-show="needLogin">
+<div layout="row" layout-align="center center" style="margin: 10px;" ng-show="needLogin">
   <md-card>
     <img ng-src="{{imagePath}}" class="md-card-image">
     <form name="loginForm">
-      <md-content layout-padding>
-        <md-input-container>
+      <md-content layout="column" layout-padding>
+        <md-input-container layout>
           <label>用户名</label>
           <input ng-model="uname" required>
         </md-input-container>
-        <md-input-container>
+        <md-input-container layout>
           <label>密码</label>
           <input ng-model="pwd" type="password" required>
         </md-input-container>
-        <md-button class="md-raised md-primary" ng-show="loginForm.$valid" ng-click="login()">登录</md-button>
-        <div ng-show="loginErr">登录失败</div>
+        <md-button layout class="md-raised md-primary" ng-show="loginForm.$valid" ng-click="login()">登录</md-button>
+        <div ng-show="loginErr && uname===''">登录失败</div>
       </md-content>
     </form>
     <md-progress-linear md-mode="query" ng-show="loging"></md-progress-linear>
