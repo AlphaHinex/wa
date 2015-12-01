@@ -130,9 +130,9 @@ var bindGridData = function($scope, result) {
   });
 };
 
-var refreshGridData = function($scope) {
+var queryWithDateRange = function($scope, callback) {
   var scPart = '',
-      sc = $scope.sc;
+    sc = $scope.sc;
   if (sc.fromDate) {
     var fromDate = format(sc.fromDate) + 'T00:00:00.000Z';
     scPart += 'and (initDate >= date(\'' + fromDate + '\') or updatedAt >= date(\'' + fromDate + '\')) ';
@@ -148,11 +148,11 @@ var refreshGridData = function($scope) {
     scPart += 'and defendants like \'%' + (sc.defendants ? sc.defendants : sc.searchText) + '%\' ';
   }
   var cql = 'select * ' +
-              'from Case ' +
-             'where plaintiff > \'\' ' + scPart;
+    'from Case ' +
+    'where plaintiff > \'\' ' + scPart;
   AV.Query.doCloudQuery(cql, {
     success: function(result) {
-      bindGridData($scope, result);
+      callback($scope, result);
     },
     error: function(error) {
       console.dir(error);
@@ -160,12 +160,91 @@ var refreshGridData = function($scope) {
   });
 };
 
+var refreshGridData = function($scope) {
+  queryWithDateRange($scope, bindGridData);
+};
+
+var refreshPie = function($scope, result) {
+  var results = result.results,
+      len = results.length;
+  var pieData = {
+    '判决': 0,
+    '调解': 0,
+    '和解': 0,
+    '不予受理': 0,
+    '咨询': 0,
+    '': 0
+  };
+
+  for (var i = 0; i < len; i++) {
+    var state = results[i].attributes.state;
+    if (typeof(state) !== 'undefined') {
+      pieData[state] += 1;
+    } else {
+      pieData[''] += 1;
+    }
+  }
+
+  console.log(pieData);
+
+  $scope.charts.pieOption =  {
+    tooltip : {
+      trigger: 'item',
+      formatter: '{b} : {c} ({d}%) <br/>{a}'
+    },
+    legend: {
+      x : 'center',
+      y : 'bottom',
+      data:['判决', '调解', '和解', '不予受理', '咨询', '无']
+    },
+    toolbox: {
+      show : true,
+      feature : {
+        restore : {show: true},
+        saveAsImage : {show: true}
+      }
+    },
+    calculable : true,
+    series : [
+      {
+        name:'案件总数: ' + result.results.length,
+        type:'pie',
+        radius : [30, 110],
+        center : ['50%', '50%'],
+        roseType : 'area',
+        selectedMode: 'multiple',
+        data:[
+          {value:pieData['判决'], name:'判决'},
+          {value:pieData['调解'], name:'调解'},
+          {value:pieData['和解'], name:'和解'},
+          {value:pieData['不予受理'], name:'不予受理'},
+          {value:pieData['咨询'], name:'咨询'},
+          {value:pieData[''], name:'无'}
+        ]
+      }
+    ]
+  };
+
+  $scope.charts.pie.setOption($scope.charts.pieOption);
+};
+
+var drawPie = function($scope) {
+  queryWithDateRange($scope, refreshPie);
+};
+
 var statisCtrl = function($scope, i18nService) {
   i18nService.setCurrentLang('zh-cn');
+  $scope.sc = {};
+
+  $scope.charts = {
+    pie: echarts.init(document.getElementById('pie-placeholder')),
+    pieOption: {}
+  };
 
   drawCalendar();
 
-  $scope.sc = {};
+  drawPie($scope);
+
   refreshCalendarView($scope);
 
   $scope.gridOptions = {
@@ -190,11 +269,13 @@ var statisCtrl = function($scope, i18nService) {
   var ctrl = this;
   ctrl.query = function() {
     refreshCalendarView($scope);
+    drawPie($scope);
     refreshGridData($scope);
   };
   ctrl.reset = function() {
     $scope.sc = {};
     $scope.gridOptions.data = [];
+    drawPie($scope);
     refreshCalendarView($scope);
   };
 };
