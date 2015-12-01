@@ -1,6 +1,6 @@
 'use strict';
 
-var loginCtrl = function($scope, $location) {
+var loginCtrl = function($scope, $location, $document) {
   if (AV.User.current()) {
     $location.url('/main');
   } else {
@@ -26,6 +26,14 @@ var loginCtrl = function($scope, $location) {
       }
     });
   };
+
+  $document.bind('keypress', function(event) {
+    // key code 13 is 'enter'
+    var code = event.keyCode || event.charCode;
+    if (code === 13) {
+      $scope.login();
+    }
+  });
 };
 
 var app = angular.module('wa');
