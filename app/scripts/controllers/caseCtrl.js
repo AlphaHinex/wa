@@ -13,6 +13,8 @@ var showTitle = function($scope) {
         $scope.roleName = role.getName();
         if ($scope.roleName === 'tx') {
           $scope.title = '铁西区交通法庭';
+        } else {
+          $scope.title = 'Wendy & Alpha';
         }
       } else if (results.length > 1) {
         $scope.role = results[0];
@@ -110,8 +112,7 @@ var postSaveAndUpdate = function(ctrl, $scope, $mdToast) {
 
 var saveOrUpdateCallbacks = function($log, ctrl, $scope, $mdToast) {
   return {
-    success: function(c) {
-      $log.debug('Save case with objectId: ' + c.id);
+    success: function() {
       postSaveAndUpdate(ctrl, $scope, $mdToast);
     },
     error: function(c, error) {
@@ -125,7 +126,6 @@ var saveOrUpdate = function($log, ctrl, $scope, $mdToast) {
   if (!$scope.case.defendants) {
     $scope.case.defendants = ctrl.searchText;
   }
-  $log.debug($scope.case);
 
   if ($scope.case.id) {
     var query = new AV.Query(Case);
