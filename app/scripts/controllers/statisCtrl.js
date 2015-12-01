@@ -226,6 +226,8 @@ var refreshPie = function($scope, result) {
   };
 
   $scope.charts.pie.setOption($scope.charts.pieOption);
+  $scope.charts.pie.restore();
+
 };
 
 var drawPie = function($scope) {
