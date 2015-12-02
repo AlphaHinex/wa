@@ -53,6 +53,9 @@ var drawCalendar = function() {
   for (var i = 0; i < 12; i ++) {
     var s = new Date(startYear, startMonth + i, 1);
     var w = shiftWeek(s) + (s.getDay() > 0 ? 1 : 0);
+    if (w > 52) {
+      break;
+    }
     var m = s.getMonth() + 1;
     var l = m > 9 ? m : '0' + m;
     svg.append('text')
