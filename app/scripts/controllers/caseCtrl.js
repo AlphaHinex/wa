@@ -56,10 +56,10 @@ var allStates = function() {
   return ['判决', '调解', '和解', '不予受理', '咨询'];
 };
 
-var refreshList = function(ctrl) {
+var refreshList = function(ctrl, $scope) {
   ctrl.querying = true;
   ctrl.allCases = [];
-  var wherePart = ctrl.nameFilter ? 'where plaintiff like \'%' + ctrl.nameFilter + '%\' ' : '';
+  var wherePart = $scope.case.plaintiff ? 'where plaintiff like \'%' + $scope.case.plaintiff + '%\' ' : '';
   var cql = 'select * ' +
     'from Case ' +
     wherePart +
@@ -100,7 +100,7 @@ var getACL = function($scope) {
 
 var postSaveAndUpdate = function(ctrl, $scope, $mdToast) {
   resetCase(ctrl, $scope);
-  refreshList(ctrl);
+  refreshList(ctrl, $scope);
   ctrl.submiting = false;
   $mdToast.show(
     $mdToast.simple()
@@ -193,7 +193,7 @@ var caseCtrl = function($scope, $mdToast, $log, $location) {
   self.allDefendants = allDefendants();
 
   resetCase(self, $scope);
-  refreshList(self);
+  refreshList(self, $scope);
 
   self.querySearch = function(query) {
     return query ? self.allDefendants.filter(createFilterFor(query)) : self.allDefendants;
@@ -205,7 +205,7 @@ var caseCtrl = function($scope, $mdToast, $log, $location) {
 
   $scope.cancel = function() {
     resetCase(self, $scope);
-    refreshList(self);
+    refreshList(self, $scope);
   };
 
   self.selectCase = function(item) {
@@ -214,7 +214,7 @@ var caseCtrl = function($scope, $mdToast, $log, $location) {
   };
 
   $scope.searchByName = function() {
-    refreshList(self);
+    refreshList(self, $scope);
   };
 
   self.setColor = setColor;
