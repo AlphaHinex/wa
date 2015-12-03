@@ -48,7 +48,8 @@ var createFilterFor = function(query) {
 var resetCase = function(ctrl, $scope) {
   ctrl.searchText = '';
   $scope.case = {
-    initDate: new Date()
+    initDate: new Date(),
+    amount: 0
   };
 };
 
