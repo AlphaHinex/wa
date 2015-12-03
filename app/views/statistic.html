@@ -1,0 +1,56 @@
+<md-tab id="statistic">
+  <md-tab-label>Statistic</md-tab-label>
+  <md-tab-body>
+    <md-card layout-padding>
+      <span class="md-title">案件统计</span>
+      <div ng-controller="statisCtrl as sCtrl">
+        <div layout="column">
+          <div layout="row">
+            <md-button class="md-raised md-primary" ng-click="sCtrl.query()">检索</md-button>
+            <md-button class="md-raised" ng-click="sCtrl.reset()">清空</md-button>
+          </div>
+          <div layout="row">
+            <label style="align-self: center;">起始日期</label>
+            <md-datepicker ng-model="sc.fromDate" md-placeholder="起始日期"></md-datepicker>
+            <label style="align-self: center; padding-left: 20px;">结束日期</label>
+            <md-datepicker ng-model="sc.toDate" md-placeholder="结束日期"></md-datepicker>
+          </div>
+          <div layout="row">
+            <md-input-container>
+              <label>状态</label>
+              <md-select ng-model="sc.state">
+                <md-option ng-repeat="state in ctrl.states" value="{{state}}"><span style="{{ctrl.setColor(state)}}">{{state}}</span></md-option>
+              </md-select>
+            </md-input-container>
+            <md-autocomplete
+              flex
+              md-floating-label="被告"
+              md-search-text="sc.searchText"
+              md-items="item in ctrl.querySearch(sc.searchText)"
+              md-item-text="item"
+              md-min-length="0"
+              md-selected-item="sc.defendants">
+              <md-item-template>
+                <span md-highlight-text="ctrl.searchText" md-highlight-flags="^i">{{item}}</span>
+              </md-item-template>
+              <md-not-found>
+                "{{ctrl.searchText}}" 尚不存在,请添加.
+              </md-not-found>
+            </md-autocomplete>
+          </div>
+        </div>
+        <div class="cvph"></div>
+        <div id="pie-placeholder" style="height: 400px;"></div>
+        <div
+          ui-grid="gridOptions"
+          ui-grid-exporter
+          ui-grid-move-columns
+          ui-grid-pagination
+          ui-grid-pinning
+          ui-grid-resize-columns
+          class="grid">
+        </div>
+      </div>
+    </md-card>
+  </md-tab-body>
+</md-tab>

@@ -188,8 +188,6 @@ var refreshPie = function($scope, result) {
     }
   }
 
-  console.log(pieData);
-
   $scope.charts.pieOption =  {
     tooltip : {
       trigger: 'item',
