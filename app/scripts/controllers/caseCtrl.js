@@ -80,7 +80,9 @@ var refreshList = function(ctrl, $scope) {
           plaintiff: obj.attributes.plaintiff,
           defendants: obj.attributes.defendants,
           details: obj.attributes.details,
-          state: obj.attributes.state
+          state: obj.attributes.state,
+          tel: obj.attributes.tel,
+          amount: obj.attributes.amount
         });
       });
       ctrl.querying = false;
@@ -138,6 +140,8 @@ var saveOrUpdate = function($log, ctrl, $scope, $mdToast) {
         c.set('defendants', $scope.case.defendants);
         c.set('details', $scope.case.details);
         c.set('state', $scope.case.state);
+        c.set('tel', $scope.case.tel);
+        c.set('amount', $scope.case.amount);
         c.setACL(getACL($scope));
         c.save(null, saveOrUpdateCallbacks($log, ctrl, $scope, $mdToast));
       },

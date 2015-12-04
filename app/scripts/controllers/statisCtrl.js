@@ -128,7 +128,9 @@ var bindGridData = function($scope, result) {
       plaintiff: obj.attributes.plaintiff,
       defendants: obj.attributes.defendants,
       details: obj.attributes.details,
-      state: obj.attributes.state
+      state: obj.attributes.state,
+      tel: obj.attributes.tel,
+      amount: obj.attributes.amount
     });
   });
 };
@@ -151,8 +153,9 @@ var queryWithDateRange = function($scope, callback) {
     scPart += 'and defendants like \'%' + (sc.defendants ? sc.defendants : sc.searchText) + '%\' ';
   }
   var cql = 'select * ' +
-    'from Case ' +
-    'where plaintiff > \'\' ' + scPart;
+              'from Case ' +
+             'where plaintiff > \'\' ' + scPart + ' ' +
+          'order by updatedAt desc';
   AV.Query.doCloudQuery(cql, {
     success: function(result) {
       callback($scope, result);
@@ -252,8 +255,10 @@ var statisCtrl = function($scope, i18nService) {
 
   $scope.gridOptions = {
     columnDefs: [
-      { name: '原告', field: 'plaintiff', width: 150 },
+      { name: '原告', field: 'plaintiff', width: 100 },
+      { name: '原告电话', field: 'tel', width: 150 },
       { name: '被告', field: 'defendants', width: 150 },
+      { name: '诉讼标的', field: 'amount', width: 100 },
       { name: '详细记录', field: 'details' },
       { name: '立案日期', field: 'initDateStr', width: 100 },
       { name: '更新日期', field: 'updateDateStr', width: 100 },
