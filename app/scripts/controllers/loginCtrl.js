@@ -16,6 +16,8 @@ var loginCtrl = function($scope, $location, $document) {
         $scope.loginErr = false;
         $scope.loging = false;
         $location.url('/main');
+        $scope.uname = '';
+        $scope.pwd = '';
       },
       error: function() {
         console.log('failed');
@@ -30,7 +32,7 @@ var loginCtrl = function($scope, $location, $document) {
   $document.bind('keypress', function(event) {
     // key code 13 is 'enter'
     var code = event.keyCode || event.charCode;
-    if (code === 13) {
+    if (code === 13 && $scope.uname && $scope.pwd) {
       $scope.login();
     }
   });
