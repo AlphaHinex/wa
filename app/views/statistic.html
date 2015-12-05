@@ -9,13 +9,13 @@
             <md-button class="md-raised md-primary" ng-click="sCtrl.query()">检索</md-button>
             <md-button class="md-raised" ng-click="sCtrl.reset()">清空</md-button>
           </div>
-          <div layout="row">
-            <label style="align-self: center;">起始日期</label>
+          <div layout="row" layout-sm="column">
+            <label style="align-self: center;" hide-sm>起始日期</label>
             <md-datepicker ng-model="sc.fromDate" md-placeholder="起始日期"></md-datepicker>
-            <label style="align-self: center; padding-left: 20px;">结束日期</label>
+            <label style="align-self: center; padding-left: 20px;" hide-sm>结束日期</label>
             <md-datepicker ng-model="sc.toDate" md-placeholder="结束日期"></md-datepicker>
           </div>
-          <div layout="row">
+          <div layout="row" layout-sm="column">
             <md-input-container>
               <label>状态</label>
               <md-select ng-model="sc.state">
@@ -39,9 +39,9 @@
             </md-autocomplete>
           </div>
         </div>
-        <div class="cvph"></div>
+        <div hide-sm hide-md class="cvph"></div>
         <div id="pie-placeholder" style="height: 400px; width: 800px;"></div>
-        <div
+        <div hide-sm
           ui-grid="gridOptions"
           ui-grid-exporter
           ui-grid-move-columns

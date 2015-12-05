@@ -6,18 +6,19 @@
         <span class="md-title">案件信息</span>
         <form name="caseForm">
           <div layout layout-sm="column">
-            <label style="align-self: center;">立案日期</label>
+            <label style="align-self: center;" hide-sm>立案日期</label>
             <md-datepicker ng-model="case.initDate"se.inlaceholder="立案日期"></md-datepicker>
-            <label style="align-self: center; padding-left: 20px;">结案日期</label>
+            <label style="align-self: center; padding-left: 20px;" hide-sm>结案日期</label>
             <md-datepicker ng-model="case.finishDate" md-placeholder="结案日期"></md-datepicker>
           </div>
           <div layout layout-sm="column">
-            <md-input-container flex="40">
+            <md-input-container flex-sm="100" flex="40">
               <label>原告</label>
               <input ng-model="case.plaintiff" required ng-blur="searchByName()">
             </md-input-container>
             <md-autocomplete
               flex="60"
+              flex-sm="100"
               md-floating-label="被告"
               md-search-text="ctrl.searchText"
               md-items="item in ctrl.querySearch(ctrl.searchText)"
@@ -55,7 +56,7 @@
             </md-input-container>
           </div>
           <div class="md-actions" layout="row">
-            <md-button class="md-raised md-primary" ng-click="save()" ng-disabled="ctrl.submiting">保存</md-button>
+            <md-button class="md-raised md-primary" ng-click="save()" ng-show="caseForm.$valid" ng-disabled="ctrl.submiting">保存</md-button>
             <md-button class="md-raised" ng-click="cancel()">取消</md-button>
           </div>
         </form>
