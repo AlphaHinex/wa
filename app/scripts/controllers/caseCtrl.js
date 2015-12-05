@@ -189,6 +189,7 @@ var caseCtrl = function($scope, $mdToast, $log, $location) {
     $scope.logout();
   } else {
     $scope.logged = true;
+    $scope.username = AV.User.current().getUsername();
   }
 
   showTitle($scope);
