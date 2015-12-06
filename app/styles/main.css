@@ -28,3 +28,7 @@ md-data-table-toolbar.alternate {
 .grid {
   height: 500px;
 }
+
+md-datepicker {
+  margin-right: 0px;
+}
