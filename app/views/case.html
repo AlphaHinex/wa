@@ -12,12 +12,16 @@
             <md-datepicker ng-model="case.finishDate" md-placeholder="结案日期"></md-datepicker>
           </div>
           <div layout layout-sm="column">
-            <md-input-container flex-sm="100" flex="40">
+            <md-input-container flex-sm="100" flex="30">
               <label>原告</label>
               <input ng-model="case.plaintiff" required ng-blur="searchByName()">
             </md-input-container>
+            <md-input-container flex="20" flex-sm="100">
+              <label>原告电话</label>
+              <input ng-model="case.tel">
+            </md-input-container>
             <md-autocomplete
-              flex="60"
+              flex="50"
               flex-sm="100"
               md-floating-label="被告"
               md-search-text="ctrl.searchText"
@@ -41,8 +45,8 @@
               </md-select>
             </md-input-container>
             <md-input-container flex>
-              <label>原告电话</label>
-              <input ng-model="case.tel">
+              <label>诉讼标的计算</label>
+              <input ng-model="case.amountFormula" ng-blur="computeAmount()">
             </md-input-container>
             <md-input-container flex>
               <label>诉讼标的</label>

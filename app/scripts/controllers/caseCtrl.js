@@ -49,7 +49,7 @@ var resetCase = function(ctrl, $scope) {
   ctrl.searchText = '';
   $scope.case = {
     initDate: new Date(),
-    amount: 0
+    amount: null
   };
 };
 
@@ -82,7 +82,8 @@ var refreshList = function(ctrl, $scope) {
           details: obj.attributes.details,
           state: obj.attributes.state,
           tel: obj.attributes.tel,
-          amount: obj.attributes.amount
+          amount: obj.attributes.amount,
+          amountFormula: obj.attributes.amountFormula
         });
       });
       ctrl.querying = false;
@@ -142,6 +143,7 @@ var saveOrUpdate = function($log, ctrl, $scope, $mdToast) {
         c.set('state', $scope.case.state);
         c.set('tel', $scope.case.tel);
         c.set('amount', $scope.case.amount);
+        c.set('amountFormula', $scope.case.amountFormula);
         c.setACL(getACL($scope));
         c.save(null, saveOrUpdateCallbacks($log, ctrl, $scope, $mdToast));
       },
@@ -224,6 +226,13 @@ var caseCtrl = function($scope, $mdToast, $log, $location) {
   };
 
   self.setColor = setColor;
+
+  $scope.computeAmount = function() {
+    var f = $scope.case.amountFormula.toString();
+    f = f.replace(/[^\d+-\\*\/]*/g, '');
+    /*jshint -W061 */
+    $scope.case.amount = eval(f);
+  };
 };
 
 var app = angular.module('wa');
