@@ -231,7 +231,7 @@ var caseCtrl = function($scope, $mdToast, $log, $location) {
     var f = $scope.case.amountFormula.toString();
     f = f.replace(/[^\d+-\\*\/]*/g, '');
     /*jshint -W061 */
-    $scope.case.amount = eval(f);
+    $scope.case.amount = parseFloat(eval(f).toFixed(2));
   };
 };
 
