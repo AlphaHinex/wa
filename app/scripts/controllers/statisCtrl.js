@@ -174,20 +174,18 @@ var refreshPie = function($scope, result) {
   var results = result.results,
       len = results.length;
   var pieData = {
+    '无': 0,
     '判决': 0,
     '调解': 0,
     '和解': 0,
     '不予受理': 0,
-    '咨询': 0,
-    '': 0
+    '咨询': 0
   };
 
   for (var i = 0; i < len; i++) {
     var state = results[i].attributes.state;
     if (typeof(state) !== 'undefined') {
       pieData[state] += 1;
-    } else {
-      pieData[''] += 1;
     }
   }
 
@@ -199,7 +197,7 @@ var refreshPie = function($scope, result) {
     legend: {
       x : 'center',
       y : 'bottom',
-      data:['判决', '调解', '和解', '不予受理', '咨询', '无']
+      data:['无', '判决', '调解', '和解', '不予受理', '咨询']
     },
     toolbox: {
       show : true,
@@ -218,12 +216,12 @@ var refreshPie = function($scope, result) {
         roseType : 'area',
         selectedMode: 'multiple',
         data:[
+          {value:pieData['无'], name:'无'},
           {value:pieData['判决'], name:'判决'},
           {value:pieData['调解'], name:'调解'},
           {value:pieData['和解'], name:'和解'},
           {value:pieData['不予受理'], name:'不予受理'},
-          {value:pieData['咨询'], name:'咨询'},
-          {value:pieData[''], name:'无'}
+          {value:pieData['咨询'], name:'咨询'}
         ]
       }
     ]

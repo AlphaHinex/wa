@@ -49,12 +49,13 @@ var resetCase = function(ctrl, $scope) {
   ctrl.searchText = '';
   $scope.case = {
     initDate: new Date(),
-    amount: null
+    amount: null,
+    state: '无'
   };
 };
 
 var allStates = function() {
-  return ['判决', '调解', '和解', '不予受理', '咨询'];
+  return ['无', '判决', '调解', '和解', '不予受理', '咨询'];
 };
 
 var refreshList = function(ctrl, $scope) {
@@ -162,19 +163,19 @@ var setColor = function(state) {
   var states = allStates();
   var result = 'font-weight: bold; color: ';
   switch (state) {
-    case states[0]:
+    case states[1]:
       result += 'red';
       break;
-    case states[1]:
+    case states[2]:
       result += 'purple';
       break;
-    case states[2]:
+    case states[3]:
       result += 'green';
       break;
-    case states[3]:
+    case states[4]:
       result += 'blue';
       break;
-    case states[4]:
+    case states[5]:
       result += 'brown';
       break;
   }
