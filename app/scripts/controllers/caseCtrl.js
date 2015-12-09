@@ -47,6 +47,7 @@ var createFilterFor = function(query) {
 
 var resetCase = function(ctrl, $scope) {
   ctrl.searchText = '';
+  ctrl.queryString = '';
   $scope.case = {
     initDate: new Date(),
     amount: null,
@@ -61,12 +62,13 @@ var allStates = function() {
 var refreshList = function(ctrl, $scope) {
   ctrl.querying = true;
   ctrl.allCases = [];
-  var wherePart = $scope.case.plaintiff ? 'where plaintiff like \'%' + $scope.case.plaintiff + '%\' ' : '';
+  var scPart = $scope.case.plaintiff ? 'and plaintiff like \'%' + $scope.case.plaintiff + '%\' ' : '';
+  scPart += ctrl.queryString ? 'and details like \'%' + ctrl.queryString + '%\'' : '';
   var cql = 'select * ' +
-    'from Case ' +
-    wherePart +
-    'order by updatedAt desc ' +
-    'limit 20';
+              'from Case ' +
+             'where plaintiff > \'\' ' + scPart + ' ' +
+          'order by updatedAt desc ' +
+             'limit 20';
 
   AV.Query.doCloudQuery(cql, {
     success: function(result) {
@@ -222,7 +224,7 @@ var caseCtrl = function($scope, $mdToast, $log, $location) {
     self.searchText = $scope.case.defendants;
   };
 
-  $scope.searchByName = function() {
+  $scope.doQuery = function() {
     refreshList(self, $scope);
   };
 

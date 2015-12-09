@@ -14,7 +14,7 @@
           <div layout layout-sm="column">
             <md-input-container flex-sm="100" flex="30">
               <label>原告</label>
-              <input ng-model="case.plaintiff" required ng-blur="searchByName()">
+              <input ng-model="case.plaintiff" required ng-blur="doQuery()">
             </md-input-container>
             <md-input-container flex="20" flex-sm="100">
               <label>原告电话</label>
@@ -72,9 +72,9 @@
         <span class="md-title">案件列表</span>
         <md-list>
           <md-list-item>
-            <md-button class="md-raised md-primary" ng-click="searchByName()">检索</md-button>
+            <md-button class="md-raised md-primary" ng-click="doQuery()">检索</md-button>
             <md-input-container flex md-no-float>
-              <input ng-model="case.plaintiff" placeholder="按原告姓名模糊搜索">
+              <input ng-model="ctrl.queryString" placeholder="按详细记录模糊搜索">
             </md-input-container>
           </md-list-item>
           <md-list-item class="md-3-line" ng-repeat="item in ctrl.allCases" ng-click="ctrl.selectCase(item)">
