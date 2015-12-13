@@ -120,6 +120,7 @@ var refreshCalendarView = function($scope) {
 
 var bindGridData = function($scope, result) {
   $scope.gridOptions.data = [];
+  $scope.total = 0;
   angular.forEach(result.results, function (obj) {
     $scope.gridOptions.data.push({
       initDateStr: format(obj.attributes.initDate),
@@ -132,7 +133,10 @@ var bindGridData = function($scope, result) {
       tel: obj.attributes.tel,
       amount: obj.attributes.amount
     });
+    var step = parseFloat(obj.attributes.amount);
+    $scope.total += isNaN(step) ? 0 : step;
   });
+  $scope.total = $scope.total.toFixed(2);
 };
 
 var queryWithDateRange = function($scope, callback) {
@@ -239,6 +243,7 @@ var drawPie = function($scope) {
 var statisCtrl = function($scope, i18nService) {
   i18nService.setCurrentLang('zh-cn');
   $scope.sc = {};
+  $scope.total = 0;
 
   $scope.charts = {
     pie: echarts.init(document.getElementById('pie-placeholder')),
@@ -256,7 +261,7 @@ var statisCtrl = function($scope, i18nService) {
       { name: '原告', field: 'plaintiff', width: 100 },
       { name: '原告电话', field: 'tel', width: 150 },
       { name: '被告', field: 'defendants', width: 150 },
-      { name: '诉讼标的', field: 'amount', width: 100 },
+      { name: '诉讼标的', field: 'amount', width: 150, aggregationType: function() { return '合计:' + $scope.total; } },
       { name: '详细记录', field: 'details' },
       { name: '立案日期', field: 'initDateStr', width: 100 },
       { name: '更新日期', field: 'updateDateStr', width: 100 },
@@ -269,7 +274,8 @@ var statisCtrl = function($scope, i18nService) {
     exporterCsvFilename: 'statistic.csv',
     exporterMenuPdf: false,
     paginationPageSizes: [25, 50, 75, 100],
-    paginationPageSize: 25
+    paginationPageSize: 25,
+    showColumnFooter: true
   };
 
   var ctrl = this;
