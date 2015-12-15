@@ -3,9 +3,6 @@
 var Case = AV.Object.extend('Case');
 
 var showTitle = function($scope) {
-  if ($scope.role && $scope.roleName && $scope.title) {
-    return;
-  }
   var rq = new AV.Query(AV.Role);
   rq.equalTo('users', AV.User.current());
   rq.find({

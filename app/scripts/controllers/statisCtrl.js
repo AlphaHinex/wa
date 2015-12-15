@@ -140,7 +140,7 @@ var bindGridData = function($scope, result) {
   $scope.total = $scope.total.toFixed(2);
 };
 
-var queryWithDateRange = function($scope, callback) {
+var queryWithDateRange = function($scope, callbacks) {
   var scPart = '',
     sc = $scope.sc;
   if (sc.fromDate) {
@@ -164,16 +164,14 @@ var queryWithDateRange = function($scope, callback) {
   AV.Query.doCloudQuery(cql, {
     success: function(result) {
       console.debug('Query case with date range');
-      callback($scope, result);
+      angular.forEach(callbacks, function (callback) {
+        callback($scope, result);
+      });
     },
     error: function(error) {
       console.dir(error);
     }
   });
-};
-
-var refreshGridData = function($scope) {
-  queryWithDateRange($scope, bindGridData);
 };
 
 var refreshPie = function($scope, result) {
@@ -238,8 +236,8 @@ var refreshPie = function($scope, result) {
 
 };
 
-var drawPie = function($scope) {
-  queryWithDateRange($scope, refreshPie);
+var renderByDateRangeQuery = function($scope) {
+  queryWithDateRange($scope, [refreshPie, bindGridData]);
 };
 
 var statisCtrl = function($scope, i18nService) {
@@ -253,10 +251,8 @@ var statisCtrl = function($scope, i18nService) {
   };
 
   drawCalendar();
-
-  drawPie($scope);
-
   refreshCalendarView($scope);
+  renderByDateRangeQuery($scope);
 
   $scope.gridOptions = {
     columnDefs: [
@@ -283,14 +279,13 @@ var statisCtrl = function($scope, i18nService) {
   var ctrl = this;
   ctrl.query = function() {
     refreshCalendarView($scope);
-    drawPie($scope);
-    refreshGridData($scope);
+    renderByDateRangeQuery($scope);
   };
   ctrl.reset = function() {
     $scope.sc = {};
     $scope.gridOptions.data = [];
-    drawPie($scope);
     refreshCalendarView($scope);
+    renderByDateRangeQuery($scope);
   };
 };
 
