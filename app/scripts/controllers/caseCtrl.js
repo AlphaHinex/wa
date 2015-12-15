@@ -3,10 +3,14 @@
 var Case = AV.Object.extend('Case');
 
 var showTitle = function($scope) {
+  if ($scope.role && $scope.roleName && $scope.title) {
+    return;
+  }
   var rq = new AV.Query(AV.Role);
   rq.equalTo('users', AV.User.current());
   rq.find({
     success: function(results) {
+      console.debug('Query role by user');
       if (results.length === 1) {
         var role = results[0];
         $scope.role = role;
@@ -72,6 +76,7 @@ var refreshList = function(ctrl, $scope) {
 
   AV.Query.doCloudQuery(cql, {
     success: function(result) {
+      console.debug('Query case by sc');
       var results = result.results;
       angular.forEach(results, function(obj){
         ctrl.allCases.push({
@@ -138,6 +143,7 @@ var saveOrUpdate = function($log, ctrl, $scope, $mdToast) {
     var query = new AV.Query(Case);
     query.get($scope.case.id, {
       success: function(c) {
+        console.debug('Save case');
         c.set('initDate', $scope.case.initDate);
         c.set('finishDate', $scope.case.finishDate);
         c.set('plaintiff', $scope.case.plaintiff);

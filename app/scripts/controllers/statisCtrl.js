@@ -100,6 +100,7 @@ var dailyCount = function(dateStr, $scope) {
                 'or (updatedAt >= date(\'' + from + '\') and updatedAt <= date(\'' + to + '\')))';
   AV.Query.doCloudQuery(cql, {
     success: function(result) {
+      console.debug('Query case in dailyCount');
       d3.selectAll('rect').data(d3.time.days(lastYear, today)).datum(format).filter(function(d) { return d === dateStr; })
         .attr('class', function() { return 'day ' + color(result.count / max); })
         .select('title')
@@ -162,6 +163,7 @@ var queryWithDateRange = function($scope, callback) {
           'order by updatedAt desc';
   AV.Query.doCloudQuery(cql, {
     success: function(result) {
+      console.debug('Query case with date range');
       callback($scope, result);
     },
     error: function(error) {
