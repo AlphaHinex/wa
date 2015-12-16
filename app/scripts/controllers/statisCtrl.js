@@ -78,7 +78,7 @@ var drawCalendar = function() {
 };
 
 var dailyCount = function(dateStr, $scope) {
-  var max = 11;
+  var max = 15;
   var sc = $scope.sc;
   var scPart = '';
   if (sc.state) {
