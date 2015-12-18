@@ -172,6 +172,60 @@ var queryWithDateRange = function($scope, callbacks) {
   });
 };
 
+var refreshBar = function($scope, result) {
+  $scope.charts.barOption = {
+    tooltip : {
+      trigger: 'axis'
+    },
+    legend: {
+      data:['无', '判决', '调解', '和解', '不予受理', '咨询']
+    },
+    calculable : true,
+    xAxis : [{
+      splitLine: {show: false},
+      data : ['周一','周二','周三','周四','周五','周六','周日']
+    }],
+    yAxis: [{
+      type: 'value'
+    }],
+    series : [
+      {
+        name:'邮件营销',
+        type:'bar',
+        stack: '总量',
+        data:[120, 132, 101, 134, 90, 230, 210]
+      },
+      {
+        name:'联盟广告',
+        type:'bar',
+        stack: '总量',
+        data:[220, 182, 191, 234, 290, 330, 310]
+      },
+      {
+        name:'视频广告',
+        type:'bar',
+        stack: '总量',
+        data:[150, 232, 201, 154, 190, 330, 410]
+      },
+      {
+        name:'直接访问',
+        type:'bar',
+        stack: '总量',
+        data:[320, 332, 301, 334, 390, 330, 320]
+      },
+      {
+        name:'搜索引擎',
+        type:'bar',
+        stack: '总量',
+        data:[820, 932, 901, 934, 1290, 1330, 1320]
+      }
+    ]
+  };
+
+  $scope.charts.bar.setOption($scope.charts.barOption);
+  $scope.charts.bar.restore();
+};
+
 var refreshPie = function($scope, result) {
   var results = result.results,
       len = results.length;
@@ -197,12 +251,12 @@ var refreshPie = function($scope, result) {
       formatter: '{b} : {c} ({d}%) <br/>{a}'
     },
     legend: {
-      x : 'center',
-      y : 'bottom',
       data:['无', '判决', '调解', '和解', '不予受理', '咨询']
     },
     toolbox: {
       show : true,
+      orient: 'vertical',
+      y: 'center',
       feature : {
         restore : {show: true},
         saveAsImage : {show: true}
@@ -231,7 +285,6 @@ var refreshPie = function($scope, result) {
 
   $scope.charts.pie.setOption($scope.charts.pieOption);
   $scope.charts.pie.restore();
-
 };
 
 var renderByDateRangeQuery = function($scope) {
@@ -244,6 +297,8 @@ var statisCtrl = function($scope, i18nService) {
   $scope.total = 0;
 
   $scope.charts = {
+    bar: echarts.init(document.getElementById('bar-placeholder')),
+    barOption: {},
     pie: echarts.init(document.getElementById('pie-placeholder')),
     pieOption: {}
   };
@@ -251,6 +306,7 @@ var statisCtrl = function($scope, i18nService) {
   drawCalendar();
   refreshCalendarView($scope);
   renderByDateRangeQuery($scope);
+  refreshBar($scope);
 
   $scope.gridOptions = {
     columnDefs: [
