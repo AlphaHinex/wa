@@ -55,10 +55,6 @@ var resetCase = function(ctrl, $scope) {
   };
 };
 
-var allStates = function() {
-  return ['无', '判决', '调解', '和解', '不予受理', '咨询'];
-};
-
 var refreshList = function(ctrl, $scope) {
   ctrl.querying = true;
   ctrl.allCases = [];
@@ -161,30 +157,7 @@ var saveOrUpdate = function($log, ctrl, $scope, $mdToast) {
   }
 };
 
-var setColor = function(state) {
-  var states = allStates();
-  var result = 'font-weight: bold; color: ';
-  switch (state) {
-    case states[1]:
-      result += 'red';
-      break;
-    case states[2]:
-      result += 'purple';
-      break;
-    case states[3]:
-      result += 'green';
-      break;
-    case states[4]:
-      result += 'blue';
-      break;
-    case states[5]:
-      result += 'brown';
-      break;
-  }
-  return result;
-};
-
-var caseCtrl = function($scope, $mdToast, $log, $location) {
+var caseCtrl = function($scope, $mdToast, $log, $location, allStates) {
   $scope.logout = function() {
     AV.User.logOut();
     $location.url('/');
@@ -200,7 +173,7 @@ var caseCtrl = function($scope, $mdToast, $log, $location) {
   showTitle($scope);
 
   var self = this;
-  self.states = allStates();
+  self.states = allStates;
   self.allDefendants = allDefendants();
 
   resetCase(self, $scope);
@@ -228,7 +201,27 @@ var caseCtrl = function($scope, $mdToast, $log, $location) {
     refreshList(self, $scope);
   };
 
-  self.setColor = setColor;
+  self.setColor = function(state) {
+    var result = 'font-weight: bold; color: ';
+    switch (state) {
+      case allStates[1]:
+        result += 'red';
+        break;
+      case allStates[2]:
+        result += 'purple';
+        break;
+      case allStates[3]:
+        result += 'green';
+        break;
+      case allStates[4]:
+        result += 'blue';
+        break;
+      case allStates[5]:
+        result += 'brown';
+        break;
+    }
+    return result;
+  };
 
   $scope.computeAmount = function() {
     var f = $scope.case.amountFormula.toString();
