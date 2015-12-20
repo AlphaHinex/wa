@@ -2,8 +2,9 @@
 
 var format = d3.time.format('%Y-%m-%d');
 
+var oneDayUnit = 24 * 60 * 60 * 1000;
 var today = new Date();
-var lastYear = new Date(today.getTime() - 365 * 24 * 60 * 60 * 1000);
+var lastYear = new Date(today.getTime() - 365 * oneDayUnit);
 
 var color = function(d) {
   var lv = Math.ceil(d/0.25);
@@ -118,25 +119,21 @@ var refreshCalendarView = function($scope) {
   });
 };
 
-var bindGridData = function($scope, result) {
-  $scope.gridOptions.data = [];
-  $scope.total = 0;
-  angular.forEach(result.results, function (obj) {
-    $scope.gridOptions.data.push({
-      initDateStr: format(obj.attributes.initDate),
-      updateDateStr: format(obj.updatedAt),
-      finishDateStr: typeof(obj.attributes.finishDate) !== 'undefined' ? format(obj.attributes.finishDate) : '',
-      plaintiff: obj.attributes.plaintiff,
-      defendants: obj.attributes.defendants,
-      details: obj.attributes.details,
-      state: obj.attributes.state,
-      tel: obj.attributes.tel,
-      amount: obj.attributes.amount
-    });
-    var step = parseFloat(obj.attributes.amount);
-    $scope.total += isNaN(step) ? 0 : step;
+var doQuery = function($scope, conditions, allStates, callbacks) {
+  var cql = 'select * ' +
+              'from Case ' +
+             'where plaintiff > \'\' ' + conditions + ' ' +
+          'order by updatedAt desc';
+  AV.Query.doCloudQuery(cql, {
+    success: function(result) {
+      angular.forEach(callbacks, function (callback) {
+        callback($scope, result, allStates);
+      });
+    },
+    error: function(error) {
+      console.dir(error);
+    }
   });
-  $scope.total = $scope.total.toFixed(2);
 };
 
 var queryWithDateRange = function($scope, allStates, callbacks) {
@@ -156,74 +153,8 @@ var queryWithDateRange = function($scope, allStates, callbacks) {
   if (sc.defendants || sc.searchText) {
     scPart += 'and defendants like \'%' + (sc.defendants ? sc.defendants : sc.searchText) + '%\' ';
   }
-  var cql = 'select * ' +
-              'from Case ' +
-             'where plaintiff > \'\' ' + scPart + ' ' +
-          'order by updatedAt desc';
-  AV.Query.doCloudQuery(cql, {
-    success: function(result) {
-      angular.forEach(callbacks, function (callback) {
-        callback($scope, result, allStates);
-      });
-    },
-    error: function(error) {
-      console.dir(error);
-    }
-  });
-};
 
-var refreshBar = function($scope, allStates) {
-  $scope.charts.barOption = {
-    tooltip : {
-      trigger: 'axis'
-    },
-    legend: {
-      data: allStates
-    },
-    calculable : true,
-    xAxis : [{
-      splitLine: {show: false},
-      data : ['周一','周二','周三','周四','周五','周六','周日']
-    }],
-    yAxis: [{
-      type: 'value'
-    }],
-    series : [
-      {
-        name:'邮件营销',
-        type:'bar',
-        stack: '总量',
-        data:[120, 132, 101, 134, 90, 230, 210]
-      },
-      {
-        name:'联盟广告',
-        type:'bar',
-        stack: '总量',
-        data:[220, 182, 191, 234, 290, 330, 310]
-      },
-      {
-        name:'视频广告',
-        type:'bar',
-        stack: '总量',
-        data:[150, 232, 201, 154, 190, 330, 410]
-      },
-      {
-        name:'直接访问',
-        type:'bar',
-        stack: '总量',
-        data:[320, 332, 301, 334, 390, 330, 320]
-      },
-      {
-        name:'搜索引擎',
-        type:'bar',
-        stack: '总量',
-        data:[820, 932, 901, 934, 1290, 1330, 1320]
-      }
-    ]
-  };
-
-  $scope.charts.bar.setOption($scope.charts.barOption);
-  $scope.charts.bar.restore();
+  doQuery($scope, scPart, allStates, callbacks);
 };
 
 var refreshPie = function($scope, result, allStates) {
@@ -281,8 +212,138 @@ var refreshPie = function($scope, result, allStates) {
   $scope.charts.pie.restore();
 };
 
+var bindGridData = function($scope, result) {
+  $scope.gridOptions.data = [];
+  $scope.total = 0;
+  angular.forEach(result.results, function (obj) {
+    $scope.gridOptions.data.push({
+      initDateStr: format(obj.attributes.initDate),
+      updateDateStr: format(obj.updatedAt),
+      finishDateStr: typeof(obj.attributes.finishDate) !== 'undefined' ? format(obj.attributes.finishDate) : '',
+      plaintiff: obj.attributes.plaintiff,
+      defendants: obj.attributes.defendants,
+      details: obj.attributes.details,
+      state: obj.attributes.state,
+      tel: obj.attributes.tel,
+      amount: obj.attributes.amount
+    });
+    var step = parseFloat(obj.attributes.amount);
+    $scope.total += isNaN(step) ? 0 : step;
+  });
+  $scope.total = $scope.total.toFixed(2);
+};
+
 var renderByDateRangeQuery = function($scope, allStates) {
   queryWithDateRange($scope, allStates, [refreshPie, bindGridData]);
+};
+
+var queryWithLastHalfYear = function($scope, allStates, callbacks) {
+  $scope.charts.barOption = {
+    tooltip : {
+      trigger: 'axis'
+    },
+    legend: {
+      data: allStates
+    },
+    toolbox: {
+      show : true,
+      orient: 'vertical',
+      x: 'left',
+      y: 'center',
+      feature : {
+        restore : {show: true},
+        saveAsImage : {show: true}
+      }
+    },
+    calculable : true,
+    xAxis : [{
+      splitLine: {show: false},
+      data : []
+    }],
+    yAxis: [{
+      type: 'value'
+    }],
+    series : []
+  };
+
+  angular.forEach(allStates, function(state) {
+    $scope.charts.barOption.series.push({
+      name: state,
+      type: 'bar',
+      stack: '总量',
+      data: [0, 0, 0, 0, 0, 0]
+    });
+  });
+
+  var lastHalfYear = d3.time.months(lastYear, today).slice(6, 12);
+  var f = d3.time.format('%Y-%m');
+  angular.forEach(lastHalfYear, function(m) {
+    $scope.charts.barOption.xAxis[0].data.push(f(m));
+    var conditions = '';
+    var fromDate = format(m) + 'T00:00:00.000Z';
+    conditions += 'and (initDate >= date(\'' + fromDate + '\') or updatedAt >= date(\'' + fromDate + '\')) ';
+    var toDate = format(new Date(m.getFullYear(), m.getMonth()+1, 1)) + 'T00:00:00.000Z';
+    conditions += 'and (initDate < date(\'' + toDate + '\') or updatedAt < date(\'' + toDate + '\')) ';
+
+    doQuery($scope, conditions, allStates, callbacks);
+  });
+};
+
+var refreshBar = function($scope, result, allStates) {
+  var results = result.results,
+      len = results.length,
+      barData = {};
+
+  if (len === 0) {
+    return;
+  }
+
+  angular.forEach(allStates, function(state) {
+    barData[state] = 0;
+  });
+
+  var guessMonth, monthCollector = {};
+  for (var i = 0; i < len; i++) {
+    var state = results[i].attributes.state;
+    var initMonth = results[i].attributes.initDate.getMonth();
+    var updateMonth = results[i].updatedAt.getMonth();
+    if (initMonth === updateMonth) {
+      guessMonth = updateMonth;
+    } else {
+      if (monthCollector[initMonth]) {
+        monthCollector[initMonth] += 1;
+      } else {
+        monthCollector[initMonth] = 0;
+      }
+      if (monthCollector[updateMonth]) {
+        monthCollector[updateMonth] += 1;
+      } else {
+        monthCollector[updateMonth] = 0;
+      }
+    }
+    if (typeof(state) !== 'undefined') {
+      barData[state] += 1;
+    }
+  }
+  if (!guessMonth) {
+    var properties = [];
+    for (var p in monthCollector) {
+      properties.push(p);
+    }
+    guessMonth = monthCollector[properties[0]] > monthCollector[properties[1]] ? properties[0] : properties[1];
+  }
+
+  var idx = 5 - (today.getMonth() - guessMonth);
+  for (var j = 0; j < allStates.length; j++) {
+    $scope.charts.barOption.series[j].data[idx] = barData[allStates[j]];
+  }
+
+  $scope.charts.bar.setOption($scope.charts.barOption);
+  $scope.charts.bar.restore();
+};
+
+var renderBarChart = function($scope, allStates) {
+  queryWithLastHalfYear($scope, allStates, [refreshBar]);
 };
 
 var statisCtrl = function($scope, i18nService, allStates) {
@@ -300,7 +361,7 @@ var statisCtrl = function($scope, i18nService, allStates) {
   drawCalendar();
   refreshCalendarView($scope);
   renderByDateRangeQuery($scope, allStates);
-  refreshBar($scope, allStates);
+  renderBarChart($scope, allStates);
 
   $scope.gridOptions = {
     columnDefs: [
