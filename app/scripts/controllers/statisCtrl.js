@@ -139,7 +139,7 @@ var bindGridData = function($scope, result) {
   $scope.total = $scope.total.toFixed(2);
 };
 
-var queryWithDateRange = function($scope, callbacks) {
+var queryWithDateRange = function($scope, allStates, callbacks) {
   var scPart = '',
     sc = $scope.sc;
   if (sc.fromDate) {
@@ -163,7 +163,7 @@ var queryWithDateRange = function($scope, callbacks) {
   AV.Query.doCloudQuery(cql, {
     success: function(result) {
       angular.forEach(callbacks, function (callback) {
-        callback($scope, result);
+        callback($scope, result, allStates);
       });
     },
     error: function(error) {
@@ -172,13 +172,13 @@ var queryWithDateRange = function($scope, callbacks) {
   });
 };
 
-var refreshBar = function($scope, result) {
+var refreshBar = function($scope, allStates) {
   $scope.charts.barOption = {
     tooltip : {
       trigger: 'axis'
     },
     legend: {
-      data:['无', '判决', '调解', '和解', '不予受理', '咨询']
+      data: allStates
     },
     calculable : true,
     xAxis : [{
@@ -226,17 +226,14 @@ var refreshBar = function($scope, result) {
   $scope.charts.bar.restore();
 };
 
-var refreshPie = function($scope, result) {
+var refreshPie = function($scope, result, allStates) {
   var results = result.results,
-      len = results.length;
-  var pieData = {
-    '无': 0,
-    '判决': 0,
-    '调解': 0,
-    '和解': 0,
-    '不予受理': 0,
-    '咨询': 0
-  };
+      len = results.length,
+      pieData = {};
+
+  angular.forEach(allStates, function(state) {
+    pieData[state] = 0;
+  });
 
   for (var i = 0; i < len; i++) {
     var state = results[i].attributes.state;
@@ -251,7 +248,7 @@ var refreshPie = function($scope, result) {
       formatter: '{b} : {c} ({d}%) <br/>{a}'
     },
     legend: {
-      data:['无', '判决', '调解', '和解', '不予受理', '咨询']
+      data: allStates
     },
     toolbox: {
       show : true,
@@ -271,27 +268,24 @@ var refreshPie = function($scope, result) {
         center : ['50%', '50%'],
         roseType : 'area',
         selectedMode: 'multiple',
-        data:[
-          {value:pieData['无'], name:'无'},
-          {value:pieData['判决'], name:'判决'},
-          {value:pieData['调解'], name:'调解'},
-          {value:pieData['和解'], name:'和解'},
-          {value:pieData['不予受理'], name:'不予受理'},
-          {value:pieData['咨询'], name:'咨询'}
-        ]
+        data:[]
       }
     ]
   };
+
+  angular.forEach(allStates, function(state) {
+    $scope.charts.pieOption.series[0].data.push({value: pieData[state], name: state});
+  });
 
   $scope.charts.pie.setOption($scope.charts.pieOption);
   $scope.charts.pie.restore();
 };
 
-var renderByDateRangeQuery = function($scope) {
-  queryWithDateRange($scope, [refreshPie, bindGridData]);
+var renderByDateRangeQuery = function($scope, allStates) {
+  queryWithDateRange($scope, allStates, [refreshPie, bindGridData]);
 };
 
-var statisCtrl = function($scope, i18nService) {
+var statisCtrl = function($scope, i18nService, allStates) {
   i18nService.setCurrentLang('zh-cn');
   $scope.sc = {};
   $scope.total = 0;
@@ -305,8 +299,8 @@ var statisCtrl = function($scope, i18nService) {
 
   drawCalendar();
   refreshCalendarView($scope);
-  renderByDateRangeQuery($scope);
-  refreshBar($scope);
+  renderByDateRangeQuery($scope, allStates);
+  refreshBar($scope, allStates);
 
   $scope.gridOptions = {
     columnDefs: [
@@ -333,13 +327,13 @@ var statisCtrl = function($scope, i18nService) {
   var ctrl = this;
   ctrl.query = function() {
     refreshCalendarView($scope);
-    renderByDateRangeQuery($scope);
+    renderByDateRangeQuery($scope, allStates);
   };
   ctrl.reset = function() {
     $scope.sc = {};
     $scope.gridOptions.data = [];
     refreshCalendarView($scope);
-    renderByDateRangeQuery($scope);
+    renderByDateRangeQuery($scope, allStates);
   };
 };
 
