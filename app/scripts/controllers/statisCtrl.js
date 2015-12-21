@@ -240,7 +240,19 @@ var renderByDateRangeQuery = function($scope, allStates) {
 var queryWithLastHalfYear = function($scope, allStates, callbacks) {
   $scope.charts.barOption = {
     tooltip : {
-      trigger: 'axis'
+      trigger: 'axis',
+      formatter: function(params) {
+        var sum = 0;
+        for (var i = 0; i < params.length; i++) {
+          sum += params[i].data;
+        }
+        var label = params[0].name;
+        label += '<br/>总数:' + sum;
+        angular.forEach(params, function(p) {
+          label += '<br/>' + p.seriesName + ':' + p.data;
+        });
+        return label;
+      }
     },
     legend: {
       data: allStates
@@ -270,7 +282,7 @@ var queryWithLastHalfYear = function($scope, allStates, callbacks) {
     $scope.charts.barOption.series.push({
       name: state,
       type: 'bar',
-      stack: '总量',
+      stack: 'sum',
       data: [0, 0, 0, 0, 0, 0]
     });
   });
