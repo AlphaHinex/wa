@@ -79,7 +79,7 @@ var drawCalendar = function() {
 };
 
 var dailyCount = function(dateStr, $scope) {
-  var max = 15;
+  var max = 38;
   var sc = $scope.sc;
   var scPart = '';
   if (sc.state) {
@@ -113,7 +113,7 @@ var dailyCount = function(dateStr, $scope) {
 };
 
 var refreshCalendarView = function($scope) {
-  var begining = new Date('2015-11-12');
+  var begining = new Date('2015-10-15');
   angular.forEach(d3.time.days(begining < lastYear ? lastYear : begining, today), function(d) {
     dailyCount(format(d), $scope);
   });
