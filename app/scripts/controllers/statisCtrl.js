@@ -79,7 +79,7 @@ var drawCalendar = function() {
 };
 
 var dailyCount = function(dateStr, $scope) {
-  var max = 38;
+  var max = 30;
   var sc = $scope.sc;
   var scPart = '';
   if (sc.state) {
@@ -98,7 +98,8 @@ var dailyCount = function(dateStr, $scope) {
               'from Case ' +
              'where plaintiff > \'\' ' + scPart +
                'and ((initDate <= date(\'' + to + '\') and initDate >= date(\'' + from + '\')) ' +
-                'or (updatedAt >= date(\'' + from + '\') and updatedAt <= date(\'' + to + '\')))';
+                'or (updatedAt >= date(\'' + from + '\') and updatedAt <= date(\'' + to + '\'))) ' +
+             'limit 1000';
   AV.Query.doCloudQuery(cql, {
     success: function(result) {
       d3.selectAll('rect').data(d3.time.days(lastYear, today)).datum(format).filter(function(d) { return d === dateStr; })
@@ -123,7 +124,8 @@ var doQuery = function($scope, conditions, allStates, callbacks) {
   var cql = 'select * ' +
               'from Case ' +
              'where plaintiff > \'\' ' + conditions + ' ' +
-          'order by updatedAt desc';
+          'order by updatedAt desc ' +
+             'limit 1000';
   AV.Query.doCloudQuery(cql, {
     success: function(result) {
       angular.forEach(callbacks, function (callback) {
@@ -291,11 +293,11 @@ var queryWithLastHalfYear = function($scope, allStates, callbacks) {
   var f = d3.time.format('%Y-%m');
   angular.forEach(lastHalfYear, function(m) {
     $scope.charts.barOption.xAxis[0].data.push(f(m));
-    var conditions = '';
     var fromDate = format(m) + 'T00:00:00.000Z';
-    conditions += 'and (initDate >= date(\'' + fromDate + '\') or updatedAt >= date(\'' + fromDate + '\')) ';
     var toDate = format(new Date(m.getFullYear(), m.getMonth()+1, 1)) + 'T00:00:00.000Z';
-    conditions += 'and (initDate < date(\'' + toDate + '\') or updatedAt < date(\'' + toDate + '\')) ';
+    var initDateCond = '(initDate >= date(\'' + fromDate + '\') and initDate < date(\'' + toDate + '\'))';
+    var updatedAtCond = '(updatedAt >= date(\'' + fromDate + '\') and updatedAt < date(\'' + toDate + '\'))';
+    var conditions = 'and (' + initDateCond + ' or ' + updatedAtCond + ') ';
 
     doQuery($scope, conditions, allStates, callbacks);
   });
@@ -342,7 +344,7 @@ var refreshBar = function($scope, result, allStates) {
     for (var p in monthCollector) {
       properties.push(p);
     }
-    guessMonth = monthCollector[properties[0]] > monthCollector[properties[1]] ? properties[0] : properties[1];
+    guessMonth = monthCollector[properties[0]] >= monthCollector[properties[1]] ? properties[0] : properties[1];
   }
 
   var idx = 5 - (today.getMonth() - guessMonth);
