@@ -139,14 +139,18 @@ var doQuery = function($scope, conditions, allStates, callbacks) {
 };
 
 var queryWithDateRange = function($scope, allStates, callbacks) {
-  var scPart = '',
-    sc = $scope.sc;
-  if (sc.fromDate) {
-    var fromDate = format(sc.fromDate) + 'T00:00:00.000Z';
+  var sc = $scope.sc, scPart = '', fromDate, toDate;
+  if (sc.fromDate && sc.toDate) {
+    fromDate = format(sc.fromDate) + 'T00:00:00.000Z';
+    toDate = format(sc.toDate) + 'T23:59:59.999Z';
+    var initDateCond = '(initDate >= date(\'' + fromDate + '\') and initDate <= date(\'' + toDate + '\'))';
+    var updatedAtCond = '(updatedAt >= date(\'' + fromDate + '\') and updatedAt <= date(\'' + toDate + '\'))';
+    scPart += 'and (' + initDateCond + ' or ' + updatedAtCond + ') ';
+  } else if (sc.fromDate) {
+    fromDate = format(sc.fromDate) + 'T00:00:00.000Z';
     scPart += 'and (initDate >= date(\'' + fromDate + '\') or updatedAt >= date(\'' + fromDate + '\')) ';
-  }
-  if (sc.toDate) {
-    var toDate = format(sc.toDate) + 'T23:59:59.999Z';
+  } else if (sc.toDate) {
+    toDate = format(sc.toDate) + 'T23:59:59.999Z';
     scPart += 'and (initDate <= date(\'' + toDate + '\') or updatedAt <= date(\'' + toDate + '\')) ';
   }
   if (sc.state) {
