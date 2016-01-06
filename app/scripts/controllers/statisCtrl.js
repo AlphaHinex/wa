@@ -351,7 +351,7 @@ var refreshBar = function($scope, result, allStates) {
     guessMonth = monthCollector[properties[0]] >= monthCollector[properties[1]] ? properties[0] : properties[1];
   }
 
-  var idx = 5 - (today.getMonth() > guessMonth ?
+  var idx = 5 - (today.getMonth() >= guessMonth ?
                     today.getMonth() - guessMonth :
                     (12 + today.getMonth() - guessMonth));
 
