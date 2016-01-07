@@ -30,6 +30,7 @@ module.exports = function(config) {
       'bower_components/angular-ui-grid/ui-grid.js',
       'bower_components/avoscloud-sdk/dist/av.js',
       'bower_components/d3/d3.js',
+      'bower_components/echarts/build/dist/echarts-all.js',
       'bower_components/angular-mocks/angular-mocks.js',
       // endbower
       "app/scripts/**/*.js",
