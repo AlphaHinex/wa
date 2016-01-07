@@ -29,6 +29,8 @@
     "jshint-stylish": "^1.0.0",
     "karma": "^0.13.19",
     "karma-jasmine": "*",
+    "karma-phantomjs-launcher": "^0.2.3",
+    "phantomjs": "^1.9.19",
     "time-grunt": "^1.0.0"
   },
   "engines": {
