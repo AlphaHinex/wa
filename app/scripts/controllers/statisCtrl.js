@@ -351,9 +351,7 @@ var refreshBar = function($scope, result, allStates) {
     guessMonth = monthCollector[properties[0]] >= monthCollector[properties[1]] ? properties[0] : properties[1];
   }
 
-  var idx = 5 - (today.getMonth() >= guessMonth ?
-                    today.getMonth() - guessMonth :
-                    (12 + today.getMonth() - guessMonth));
+  var idx = $scope.computeIdx(today, guessMonth);
 
   for (var j = 0; j < allStates.length; j++) {
     $scope.charts.barOption.series[j].data[idx] = barData[allStates[j]];
@@ -367,10 +365,12 @@ var renderBarChart = function($scope, allStates) {
   queryWithLastHalfYear($scope, allStates, [refreshBar]);
 };
 
-var statisCtrl = function($scope, i18nService, allStates) {
+var statisCtrl = function($scope, i18nService, allStates, barService) {
   i18nService.setCurrentLang('zh-cn');
   $scope.sc = {};
   $scope.total = 0;
+
+  $scope.computeIdx = barService.computeIdx;
 
   $scope.charts = {
     bar: echarts.init(document.getElementById('bar-placeholder')),
