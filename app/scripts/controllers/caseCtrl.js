@@ -55,9 +55,21 @@ var resetCase = function(ctrl, $scope) {
   };
 };
 
+var listDescriptions = ['最近 20 条', '按原告搜索结果', '按详细记录模糊搜索结果', '搜索结果'];
 var refreshList = function(ctrl, $scope) {
   ctrl.querying = true;
   ctrl.allCases = [];
+
+  if ($scope.case.plaintiff && ctrl.queryString) {
+    $scope.listDescription = listDescriptions[3];
+  } else if ($scope.case.plaintiff) {
+    $scope.listDescription = listDescriptions[1];
+  } else if (ctrl.queryString) {
+    $scope.listDescription = listDescriptions[2];
+  } else {
+    $scope.listDescription = listDescriptions[0];
+  }
+
   var scPart = $scope.case.plaintiff ? 'and plaintiff like \'%' + $scope.case.plaintiff + '%\' ' : '';
   scPart += ctrl.queryString ? 'and details like \'%' + ctrl.queryString + '%\'' : '';
   var cql = 'select * ' +
@@ -158,6 +170,8 @@ var saveOrUpdate = function($log, ctrl, $scope, $mdToast) {
 };
 
 var caseCtrl = function($scope, $mdToast, $log, $location, allStates) {
+  $scope.listDescription = listDescriptions[0];
+
   $scope.logout = function() {
     AV.User.logOut();
     $location.url('/');
