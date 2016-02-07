@@ -80,7 +80,10 @@ var refreshList = function(ctrl, $scope) {
 
   AV.Query.doCloudQuery(cql, {
     success: function(result) {
+      $scope.todayCount = 0;
       var results = result.results;
+      var format = d3.time.format('%Y-%m-%d');
+      var today = new Date();
       angular.forEach(results, function(obj){
         ctrl.allCases.push({
           id: obj.id,
@@ -96,7 +99,13 @@ var refreshList = function(ctrl, $scope) {
           amount: obj.attributes.amount,
           amountFormula: obj.attributes.amountFormula
         });
+        if (format(obj.createdAt) === format(today) || format(obj.updatedAt) === format(today)) {
+          $scope.todayCount ++;
+        }
       });
+      if ($scope.todayCount === 20) {
+        $scope.todayCount = '20 +';
+      }
       ctrl.querying = false;
     },
     error: function(error) {

@@ -10,6 +10,8 @@
             <md-datepicker ng-model="case.initDate"se.inlaceholder="立案日期"></md-datepicker>
             <label style="align-self: center; padding-left: 20px;" hide-sm>结案日期</label>
             <md-datepicker ng-model="case.finishDate" md-placeholder="结案日期"></md-datepicker>
+            <label style="align-self: center; padding-left: 20px;" hide-sm>更新日期</label>
+            <md-datepicker ng-model="case.updatedAt" md-placeholder="更新日期" disabled></md-datepicker>
           </div>
           <div layout layout-sm="column">
             <md-input-container flex-sm="100" flex="30">
@@ -75,6 +77,14 @@
               <span class="md-title">案件列表</span>
               <p>{{ listDescription }}</p>
             </div>
+            <md-fab-speed-dial flex="90" flex-sm="70" flex-md="80" style="align-items: flex-start;">
+              <md-fab-trigger>
+                <md-button aria-label="menu" class="md-fab md-warn">
+                  <md-tooltip md-direction="top" md-visible="tooltipVisible">今日案件数量</md-tooltip>
+                  {{ todayCount }}
+                </md-button>
+              </md-fab-trigger>
+            </md-fab-speed-dial>
           </md-list-item>
           <md-list-item>
             <md-input-container flex md-no-float>
