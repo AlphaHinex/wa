@@ -13,6 +13,9 @@
     "angular-mocks": "^1.3.0"
   },
   "appPath": "app",
+  "resolutions": {
+    "angular": "1.5.0"
+  },
   "overrides": {
     "echarts": {
       "main": "build/dist/echarts-all.js"
