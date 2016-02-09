@@ -1,10 +1,10 @@
 <div ng-controller="caseCtrl as ctrl" ng-show="logged">
-  <md-toolbar layout="row" class="md-toolbar-tools md-whiteframe-z1">
+  <md-toolbar layout="row" class="md-toolbar-tools md-whiteframe-z1" style="position: fixed;">
     <h1 flex>{{ title }}</h1>
     <img src="https://travis-ci.org/AlphaHinex/wa.svg?branch=master" />
     <md-button class="md-warn" ng-click="logout()">{{ username }} 登出</md-button>
   </md-toolbar>
-  <div layout="row" flex>
+  <div layout="row" flex style="position: relative; top: 64px;">
     <div layout="column" flex>
       <md-content class="md-padding">
         <md-tabs md-dynamic-height>
