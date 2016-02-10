@@ -102,10 +102,12 @@ var dailyCount = function(dateStr, $scope) {
              'limit 1000';
   AV.Query.doCloudQuery(cql, {
     success: function(result) {
-      d3.selectAll('rect').data(d3.time.days(lastYear, today)).datum(format).filter(function(d) { return d === dateStr; })
-        .attr('class', function() { return 'day ' + color(result.count / max); })
-        .select('title')
-        .text(function(d) { return d + ': ' + result.count + ' 件案子'; });
+      var rects = d3.selectAll('rect').data(d3.time.days(lastYear, today)).datum(format).filter(function(d) { return d === dateStr; })
+        .attr('class', function() { return 'day ' + color(result.count / max); });
+      rects.select('title').text(function(d) { return d + ': ' + result.count + ' 件案子'; });
+      rects.on('mouseover', function(d) {
+        document.getElementById('dayCountMsg').innerHTML = d + ':' + result.count + ' 件案子';
+      });
     },
     error: function(error) {
       console.dir(error);
