@@ -147,16 +147,24 @@ var doQuery = function($scope, conditions, allStates, callbacks) {
 var queryWithDateRange = function($scope, allStates, callbacks) {
   var sc = $scope.sc, scPart = '', fromDate, toDate;
   if (sc.fromDate && sc.toDate) {
-    fromDate = format(sc.fromDate) + 'T00:00:00.000Z';
-    toDate = format(sc.toDate) + 'T23:59:59.999Z';
+    fromDate = sc.fromDate;
+    fromDate.setHours(0, 0, 0, 0);
+    fromDate = fromDate.toISOString();
+    toDate = sc.toDate;
+    toDate.setHours(23, 59, 59, 999);
+    toDate = toDate.toISOString();
     var initDateCond = '(initDate >= date(\'' + fromDate + '\') and initDate <= date(\'' + toDate + '\'))';
     var updatedAtCond = '(updatedAt >= date(\'' + fromDate + '\') and updatedAt <= date(\'' + toDate + '\'))';
     scPart += 'and (' + initDateCond + ' or ' + updatedAtCond + ') ';
   } else if (sc.fromDate) {
-    fromDate = format(sc.fromDate) + 'T00:00:00.000Z';
+    fromDate = sc.fromDate;
+    fromDate.setHours(0, 0, 0, 0);
+    fromDate = fromDate.toISOString();
     scPart += 'and (initDate >= date(\'' + fromDate + '\') or updatedAt >= date(\'' + fromDate + '\')) ';
   } else if (sc.toDate) {
-    toDate = format(sc.toDate) + 'T23:59:59.999Z';
+    toDate = sc.toDate;
+    toDate.setHours(23, 59, 59, 999);
+    toDate = toDate.toISOString();
     scPart += 'and (initDate <= date(\'' + toDate + '\') or updatedAt <= date(\'' + toDate + '\')) ';
   }
   if (sc.state) {
@@ -303,8 +311,12 @@ var queryWithLastHalfYear = function($scope, allStates, callbacks) {
   var f = d3.time.format('%Y-%m');
   angular.forEach(lastHalfYear, function(m) {
     $scope.charts.barOption.xAxis[0].data.push(f(m));
-    var fromDate = format(m) + 'T00:00:00.000Z';
-    var toDate = format(new Date(m.getFullYear(), m.getMonth()+1, 1)) + 'T00:00:00.000Z';
+    var fromDate = m;
+    fromDate.setHours(0, 0, 0, 0);
+    fromDate = fromDate.toISOString();
+    var toDate = new Date(m.getFullYear(), m.getMonth()+1, 1);
+    toDate.setHours(0, 0, 0, 0);
+    toDate = toDate.toISOString();
     var initDateCond = '(initDate >= date(\'' + fromDate + '\') and initDate < date(\'' + toDate + '\'))';
     var updatedAtCond = '(updatedAt >= date(\'' + fromDate + '\') and updatedAt < date(\'' + toDate + '\'))';
     var conditions = 'and (' + initDateCond + ' or ' + updatedAtCond + ') ';
