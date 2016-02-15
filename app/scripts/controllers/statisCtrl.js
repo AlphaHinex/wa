@@ -426,7 +426,7 @@ var statisCtrl = function($scope, i18nService, allStates, barService) {
     ],
     data: [],
     enableGridMenu: true,
-    enableSorting: false,
+    enableSorting: true,
     exporterCsvFilename: 'statistic.csv',
     exporterMenuPdf: false,
     paginationPageSizes: [25, 50, 75, 100],
