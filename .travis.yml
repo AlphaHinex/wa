@@ -12,7 +12,7 @@ before_script:
   - bower install
 
 script:
-  - grunt --force
+  - grunt
 
 after_success:
   - git submodule add -b gh-pages https://${GH_OAUTH_TOKEN}@github.com/${GH_OWNER}/${GH_PROJECT_NAME} site > /dev/null 2>&1

@@ -28,4 +28,4 @@ You need [node.js](https://nodejs.org/) first (`v0.10.0` at least), and then
 How to build
 ------------
 
-    $ grunt --force
+    $ grunt
