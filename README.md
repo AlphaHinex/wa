@@ -3,6 +3,10 @@ WA
 
 [![Build Status](https://travis-ci.org/AlphaHinex/wa.svg?branch=master)](https://travis-ci.org/AlphaHinex/wa)
 
+[![Code Climate](https://codeclimate.com/github/AlphaHinex/wa/badges/gpa.svg)](https://codeclimate.com/github/AlphaHinex/wa)
+[![Test Coverage](https://codeclimate.com/github/AlphaHinex/wa/badges/coverage.svg)](https://codeclimate.com/github/AlphaHinex/wa/coverage)
+[![Issue Count](https://codeclimate.com/github/AlphaHinex/wa/badges/issue_count.svg)](https://codeclimate.com/github/AlphaHinex/wa)
+
 WA is some kind of a experimental project that built with [material](https://github.com/angular/material) and [LeanCloud](https://leancloud.cn/). You can view the live demo on [http://alphahinex.github.io/wa](http://alphahinex.github.io/wa) with `guest`/`guest`.
 
 Technologies used in here
