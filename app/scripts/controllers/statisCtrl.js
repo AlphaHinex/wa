@@ -338,7 +338,7 @@ var refreshBar = function($scope, result, allStates) {
     barData[state] = 0;
   });
 
-  var guessMonth, monthCollector = {};
+  var guessMonth, monthCollector = [];
   for (var i = 0; i < len; i++) {
     var state = results[i].attributes.state;
     var initMonth = results[i].attributes.initDate.getMonth();
