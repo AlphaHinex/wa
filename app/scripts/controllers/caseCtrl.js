@@ -250,10 +250,12 @@ var caseCtrl = function($scope, $mdToast, $log, $location, allStates) {
   };
 
   $scope.computeAmount = function() {
-    var f = $scope.case.amountFormula.toString();
-    f = f.replace(/[^\d+-\\*\/]*/g, '');
-    /*jshint -W061 */
-    $scope.case.amount = parseFloat(eval(f).toFixed(2));
+    var f = $scope.case.amountFormula;
+    if (f) {
+      f = f.toString().replace(/[^\d+-\\*\/]*/g, '');
+      /*jshint -W061 */
+      $scope.case.amount = parseFloat(eval(f).toFixed(2));
+    }
   };
 };
 
