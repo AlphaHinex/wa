@@ -40,13 +40,13 @@
             </md-autocomplete>
           </div>
           <div layout layout-sm="column">
-            <md-input-container>
+            <md-input-container flex="10">
               <label>状态</label>
               <md-select ng-model="case.state">
                 <md-option ng-repeat="state in ctrl.states" value="{{state}}"><span style="{{ctrl.setColor(state)}}">{{state}}</span></md-option>
               </md-select>
             </md-input-container>
-            <md-input-container flex="80">
+            <md-input-container flex="75">
               <label>诉讼标的计算</label>
               <input ng-model="case.amountFormula" ng-blur="computeAmount()">
             </md-input-container>

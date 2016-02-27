@@ -33,7 +33,7 @@ var allDefendants = function() {
     '浙商保险, 华泰保险, 民安保险, 永安保险, 大地保险, ' +
     '永诚保险, 都邦保险, 信达保险, 华安保险, 太平保险, ' +
     '太平洋保险, 安华农业, 紫金财险, 渤海保险, 中银保险, ' +
-    '英大泰和保险';
+    '英大泰和保险, 阳光保险';
   return all.split(/, +/g).map(function(item) {
     return item;
   });
@@ -231,15 +231,18 @@ var caseCtrl = function($scope, $mdToast, $log, $location, allStates) {
         result += 'red';
         break;
       case allStates[2]:
-        result += 'purple';
+        result += 'MediumVioletRed';
         break;
       case allStates[3]:
-        result += 'green';
+        result += 'purple';
         break;
       case allStates[4]:
-        result += 'blue';
+        result += 'green';
         break;
       case allStates[5]:
+        result += 'blue';
+        break;
+      case allStates[6]:
         result += 'brown';
         break;
     }

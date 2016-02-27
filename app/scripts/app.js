@@ -29,4 +29,4 @@ var resourcesRoute = function($routeProvider) {
 };
 app.config(['$routeProvider', resourcesRoute]);
 
-app.constant('allStates', ['无', '判决', '调解', '和解', '不予受理', '咨询']);
+app.constant('allStates', ['无', '判决', '交通法庭判决', '调解', '和解', '不予受理', '咨询']);
